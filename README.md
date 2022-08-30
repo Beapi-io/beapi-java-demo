@@ -5,10 +5,8 @@
 
 **JVM** - 17 
 
-**Configuration Files** - https://github.com/orubel/spring-boot-starter-beapi-config 
-Follow instructions in documentation for configuration
+**Configuration** -  Follow instructions in documentation for [installation/configuration](https://beapi-io.github.io/spring-boot-starter-beapi/index.html#section-2)
 
-**Documentation** - [https://beapi-io.github.io/spring-boot-starter-beapi/](https://beapi-io.github.io/spring-boot-starter-beapi/)
 
 **Build**
 ```
