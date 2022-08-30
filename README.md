@@ -10,13 +10,14 @@
 gradle clean;gradle build
  ```
 
-**Getting a Token and calling your api** - 
+**Getting a Token** - 
 
 This will get you your BEARER token to use in your calls/app:
 ```
 curl -v -H "Content-Type: application/json" -X POST -d '{"username":"admin","password":"@6m!nP@s5"}' http://localhost:8080/authenticate
 ```
 
+**Calling your API**
 Then call your api normally:
 ```
 curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_token_here}" --request GET "http://localhost:8080/v{appVersion}/user/show/5"
