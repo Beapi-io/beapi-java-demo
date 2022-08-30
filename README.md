@@ -18,6 +18,7 @@ curl -v -H "Content-Type: application/json" -X POST -d '{"username":"admin","pas
 ```
 
 **Calling your API**
+
 Then call your api normally:
 ```
 curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_token_here}" --request GET "http://localhost:8080/v{appVersion}/user/show/5"
