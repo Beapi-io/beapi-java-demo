@@ -3,7 +3,7 @@
 
 **Springboot Version** - 2.6.2 (or greater)
 
-**JVM** - 17 (contact if you need a build for a lower version)
+**JVM** - 17 
 
 **Build**
 ```
