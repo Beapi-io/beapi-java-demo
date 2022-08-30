@@ -32,6 +32,8 @@ curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_toke
 NOTE:  appVersion can be found in your gradle.properties file as 'version'  
 
 ---
+**NOTE**
+Project is currently not properly flushing DB so chaining tests have been disabled until I add fix; you can test but you will have to hand remove values from DB.
 
 
 
