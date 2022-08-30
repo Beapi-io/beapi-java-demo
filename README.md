@@ -1,16 +1,37 @@
-<<<<<<< HEAD
-# demo-application
-demp application for beapi-spring-boot-autoconfiguration
+![alt text](https://github.com/orubel/logos/blob/master/beapi_logo_large.png)
+# spring-boot-starter-beapi Java Demo
 
-## usage notes
+**Springboot Version** - 2.6.2 (or greater)
 
-# authenticate (get token)
-curl -v -H "Content-Type: application/json" -X POST -d '{"username":"your_username","password":"your_password"}' http://localhost:8080/authenticate
+**JVM** - 17 
+
+**Configuration Files** - https://github.com/orubel/spring-boot-starter-beapi-config 
+Follow instructions in documentation for configuration
+
+**Documentation** - [https://beapi-io.github.io/spring-boot-starter-beapi/](https://beapi-io.github.io/spring-boot-starter-beapi/)
+
+**Build**
+```
+gradle clean;gradle build
+ ```
+ ---
+**Getting a Token** - 
+
+This will get you your BEARER token to use in your calls/app:
+```
+curl -v -H "Content-Type: application/json" -X POST -d '{"username":"admin","password":"@6m!nP@s5"}' http://localhost:8080/authenticate
+```
+
+  
+**Calling your API**
+
+Then call your api normally:
+```
+curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_token_here}" --request GET "http://localhost:8080/v{appVersion}/user/show/5"
+```
+NOTE:  appVersion can be found in your gradle.properties file as 'version'  
+
+---
 
 
-=======
-# beapi-java-demo
 
-
-coming before sept 1 2022
->>>>>>> d88033fd6b19f4127d5cdea4b8352685bdc2ba66
