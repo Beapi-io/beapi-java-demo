@@ -1,0 +1,106 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
+plugins {
+	id 'application'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'groovy'
+	id 'java'
+}
+
+description = "Java Demo Application for beapi-spring-boot-starter"
+
+apply plugin: 'application'
+
+sourceCompatibility = "${sourceCompatibility}"
+
+repositories {
+	//mavenLocal()
+	mavenCentral()
+	maven {
+		url = uri("https://maven.pkg.github.com/orubel/spring-boot-starter-beapi")
+		credentials {
+			username = 'orubel'
+			password = System.getenv("TOKEN")
+		}
+	}
+}
+
+//bootJar {
+//    enabled = true
+//}
+
+//jar {
+//    enabled = true
+//}
+
+apply plugin: "io.spring.dependency-management"
+
+dependencies {
+
+	implementation 'io.beapi:spring-boot-starter-beapi:0.5'
+
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat:2.7.0'
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	//implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+
+	// LOGGING
+	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'
+
+	// SECURITY / TOKENS
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation "com.fasterxml.jackson.core:jackson-core:2.12.0"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.12.0"
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	implementation('org.projectlombok:lombok:1.18.2')
+	annotationProcessor 'org.projectlombok:lombok:1.18.2'
+	implementation 'commons-io:commons-io:2.8.0'
+
+	// DATABASE
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation 'com.zaxxer:HikariCP:3.2.0'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+
+	// ACTUATOR
+	// todo : need to build integrated healthpoint metrics reporting
+	//implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+	// TEST
+	implementation 'org.codehaus.groovy:groovy'
+	implementation 'org.codehaus.groovy:groovy-json:2.5.4'
+	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
+	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+}
+
+application {
+	mainClass = 'demo.application.Application'
+	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=300 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom"]
+	applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom"]
+}
+
+
+springBoot {
+	buildInfo()
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'demo.application.Application'
+	}
+}
