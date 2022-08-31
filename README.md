@@ -9,8 +9,15 @@
 
 
 **Build**
+From the shell of the install directory, type:
 ```
 gradle clean;gradle build
+ ```
+ 
+ **Run
+ From the shell of the install directory, type:
+ ```
+ java -jar build/libs/java-demo-1.0.jar
  ```
  ---
 **Getting a Token** - 
