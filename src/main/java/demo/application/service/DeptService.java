@@ -20,13 +20,16 @@ public class DeptService implements IDept {
     //@Override
     public Dept save(Dept dept){
         // TODO Auto-generated method stub
-        return deptrepo.save(dept);
+        deptrepo.save(dept);
+        deptrepo.flush();
+        return dept;
     }
 
     @Override
     public void deleteById(Long id){
         // TODO Auto-generated method stub
         deptrepo.deleteById(id);
+        deptrepo.flush();
     }
 
     //@Override

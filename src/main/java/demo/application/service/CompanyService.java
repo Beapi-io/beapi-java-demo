@@ -27,6 +27,7 @@ public class CompanyService implements ICompany {
     public void deleteById(Long id){
         // TODO Auto-generated method stub
         comprepo.deleteById(id);
+        comprepo.flush();
     }
 
     //@Override

@@ -30,7 +30,9 @@ public class UserAuthorityService implements IUserAuthority{
 
     @Override
     public UserAuthority save(UserAuthority userAuthority){
-        return userauthrepo.save(userAuthority);
+        userauthrepo.save(userAuthority);
+        userauthrepo.flush();
+        return userAuthority;
     }
 
 }

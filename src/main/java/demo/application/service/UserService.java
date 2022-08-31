@@ -43,22 +43,28 @@ public class UserService implements IUser {
     }
     @Override
     public User save(User usr) {
-        return userrepo.save(usr);
+        userrepo.save(usr);
+        userrepo.flush();
+        return usr;
     }
 
     //@Override
     public void deleteById(Long id) {
         userrepo.deleteById(id);
+        userrepo.flush();
     }
 
     @Override
     public void deleteById(int id) {
         userrepo.deleteById(Long.valueOf(id));
+        userrepo.flush();
     }
 
     @Override
     public User bootstrapUser(User usr) {
-        return userrepo.save(usr);
+        userrepo.save(usr);
+        userrepo.flush();
+        return usr;
     }
 
 }

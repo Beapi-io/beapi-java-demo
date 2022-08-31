@@ -20,13 +20,16 @@ public class BranchService implements IBranch {
     //@Override
     public Branch save(Branch branch){
         // TODO Auto-generated method stub
-        return branchrepo.save(branch);
+        branchrepo.save(branch);
+        branchrepo.flush();
+        return branch;
     }
 
     @Override
     public void deleteById(Long id){
         // TODO Auto-generated method stub
         branchrepo.deleteById(id);
+        branchrepo.flush();
     }
 
     //@Override

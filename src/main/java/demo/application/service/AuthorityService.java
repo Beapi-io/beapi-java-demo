@@ -25,7 +25,9 @@ public class AuthorityService implements IAuthority {
 
     @Override
     public Authority save(Authority authority) {
-        return authrepo.save(authority);
+        authrepo.save(authority);
+        authrepo.flush();
+        return authority;
     }
 
     public Authority findByAuthority(String authority){
@@ -44,6 +46,7 @@ public class AuthorityService implements IAuthority {
 
     public void deleteById(Long id) {
         authrepo.deleteById(id);
+        authrepo.flush();
     }
 
     //@Override
