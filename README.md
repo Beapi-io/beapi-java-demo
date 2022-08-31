@@ -5,10 +5,8 @@
 
 **JVM** - 17 
 
-**Configuration Files** - https://github.com/orubel/spring-boot-starter-beapi-config 
-Follow instructions in documentation for configuration
+**Configuration** -  Follow instructions in documentation for [installation/configuration](https://beapi-io.github.io/spring-boot-starter-beapi/index.html#section-2)
 
-**Documentation** - [https://beapi-io.github.io/spring-boot-starter-beapi/](https://beapi-io.github.io/spring-boot-starter-beapi/)
 
 **Build**
 ```
@@ -32,6 +30,8 @@ curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_toke
 NOTE:  appVersion can be found in your gradle.properties file as 'version'  
 
 ---
+**NOTE**
+Project is currently not properly flushing DB so chaining tests have been disabled until I add fix; you can test but you will have to hand remove values from DB.
 
 
 
