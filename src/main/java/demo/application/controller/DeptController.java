@@ -34,7 +34,8 @@ public class DeptController extends BeapiController{
 
 
 	public Dept create(HttpServletRequest request, HttpServletResponse response){
-		Branch branch = branchService.findById(Long.valueOf(params.get("branchId")));
+
+		Branch branch = branchService.findById(Long.valueOf(params.get("branchId").toString()));
 
 		if(Objects.nonNull(branch)) {
 			Dept dept = new Dept();

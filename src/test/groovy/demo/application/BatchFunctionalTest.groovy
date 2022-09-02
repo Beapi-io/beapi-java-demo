@@ -148,6 +148,7 @@ class BatchFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
+
         when:"info is not null"
             assert info!=[:]
         then:"get user"

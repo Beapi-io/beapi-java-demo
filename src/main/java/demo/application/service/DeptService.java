@@ -20,7 +20,7 @@ public class DeptService implements IDept {
     //@Override
     public Dept save(Dept dept){
         // TODO Auto-generated method stub
-        deptrepo.save(dept);
+        deptrepo.saveAndFlush(dept);
         deptrepo.flush();
         return dept;
     }

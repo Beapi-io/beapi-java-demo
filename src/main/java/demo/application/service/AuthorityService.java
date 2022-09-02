@@ -25,8 +25,7 @@ public class AuthorityService implements IAuthority {
 
     @Override
     public Authority save(Authority authority) {
-        authrepo.save(authority);
-        authrepo.flush();
+        authrepo.saveAndFlush(authority);
         return authority;
     }
 

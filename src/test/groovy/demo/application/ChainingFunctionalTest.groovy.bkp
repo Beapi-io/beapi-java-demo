@@ -86,6 +86,7 @@ class ChainingFunctionalTest extends Specification {
     @Shared Long branchId
     @Shared Long deptId
 
+
     void "[superuser] login "(){
         setup:"logging in"
 
@@ -115,6 +116,8 @@ class ChainingFunctionalTest extends Specification {
     // company/create
     void "[superuser] POST create COMPANY"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] POST create COMPANY")
             String METHOD = "POST"
             String controller = 'company'
             String action = 'create'
@@ -138,6 +141,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -161,6 +165,8 @@ class ChainingFunctionalTest extends Specification {
     // company/show
     void "[superuser] GET show COMPANY"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET show COMPANY")
             String METHOD = "GET"
             String controller = 'company'
             String action = 'show'
@@ -179,6 +185,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -203,6 +210,8 @@ class ChainingFunctionalTest extends Specification {
     // branch/create
     void "[superuser] POST create BRANCH"() {
         setup:"api is called"
+            println(" ")
+            println(" [superuser] POSTcreate BRANCH ")
             String METHOD = "POST"
             String controller = 'branch'
             String action = 'create'
@@ -226,6 +235,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -250,6 +260,8 @@ class ChainingFunctionalTest extends Specification {
     void "[superuser] GET show BRANCH"() {
 
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET show BRANCH")
             String METHOD = "GET"
             String controller = 'branch'
             String action = 'show'
@@ -268,6 +280,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -292,6 +305,8 @@ class ChainingFunctionalTest extends Specification {
     // dept/create
     void "[superuser] POST create DEPT"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET create DEPT")
             String METHOD = "POST"
             String controller = 'dept'
             String action = 'create'
@@ -315,6 +330,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -338,6 +354,8 @@ class ChainingFunctionalTest extends Specification {
     // dept/show
     void "[superuser] GET show DEPT"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET show DEPT")
             String METHOD = "GET"
             String controller = 'dept'
             String action = 'show'
@@ -356,6 +374,7 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -366,6 +385,7 @@ class ChainingFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
+        println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -377,10 +397,12 @@ class ChainingFunctionalTest extends Specification {
 
 
 
-
+/*
 
     void "[superuser] API CHAINING(R) blankchain test"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] API CHAINING(R) blankchain test with '${this.deptId}'")
             String controller = 'dept'
             String action = 'show'
 
@@ -414,6 +436,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -426,6 +449,8 @@ class ChainingFunctionalTest extends Specification {
 
     void "[superuser] API CHAINING(R) postchain test"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] API CHAINING(R) postchain test")
             String controller = 'dept'
             String action = 'show'
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'postchain','order':['branch/show':'companyId','company/update':'return']]
@@ -459,6 +484,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -470,6 +496,8 @@ class ChainingFunctionalTest extends Specification {
 
     void "[superuser] API CHAINING(R) prechain test"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] API CHAINING(R) prechain test")
             String controller = 'dept'
             String action = 'update'
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'prechain','order':['branch/show':'companyId','company/show':'return']]
@@ -505,6 +533,7 @@ class ChainingFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
+
         when:"info is not null"
             assert info!=[:]
         then:"get user"
@@ -513,129 +542,18 @@ class ChainingFunctionalTest extends Specification {
     }
 
 
-    // ########## CLEANUP ########################################################################
-
-    // dept/delete
-    void "[superuser] DELETE delete DEPT"() {
-        setup:"api is called"
-            println(" ")
-            String METHOD = "DELETE"
-            String controller = 'dept'
-            String action = 'delete'
-
-            LinkedHashMap cache = apiCacheService.getApiCache(controller)
-            this.appVersion = getVersion()
-            this.exchangeIntro = "v${this.appVersion}"
-
-            ArrayList returnsList = []
-            def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
-            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
-
-            HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
-            HttpDelete request = new HttpDelete(url)
-            request.setHeader(new BasicHeader("Content-Type","application/json"));
-            request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = client.execute(request);
-
-            int statusCode = response.getStatusLine().getStatusCode()
-
-            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            Object info = new JsonSlurper().parseText(responseBody)
-
-
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            assert statusCode == 200
-            assert info.id.toLong() == this.deptId
+    void "Cleaning up data"() {
+        setup:
+            compService.deleteById(this.compId);
+            branchService.deleteById(this.branchId);
+            deptService.deleteById(this.deptId);
+        when: "info is not null"
+            assert true
+        then: "get user"
+            assert true
     }
 
-    // branch/delete
-    void "[superuser] DELETE delete BRANCH"() {
-        setup:"api is called"
-            println(" ")
-            String METHOD = "DELETE"
-            String controller = 'branch'
-            String action = 'delete'
-
-            LinkedHashMap cache = apiCacheService.getApiCache(controller)
-            this.appVersion = getVersion()
-            this.exchangeIntro = "v${this.appVersion}"
-
-            ArrayList returnsList = []
-            def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
-            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
-
-            HttpClient client = new DefaultHttpClient();
-            HttpDelete request = new HttpDelete(url)
-            request.setHeader(new BasicHeader("Content-Type","application/json"));
-            request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = client.execute(request);
-
-            int statusCode = response.getStatusLine().getStatusCode()
-
-            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            Object info = new JsonSlurper().parseText(responseBody)
-
-
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            assert statusCode == 200
-            assert info.id.toLong() == this.branchId
-    }
-
-    // company/delete
-    void "[superuser] DELETE delete COMPANY"() {
-        setup:"api is called"
-            println(" ")
-            String METHOD = "DELETE"
-            String controller = 'company'
-            String action = 'delete'
-
-            LinkedHashMap cache = apiCacheService.getApiCache(controller)
-            this.appVersion = getVersion()
-            this.exchangeIntro = "v${this.appVersion}"
-
-            ArrayList returnsList = []
-            def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
-            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
-
-            HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
-            HttpDelete request = new HttpDelete(url)
-            request.setHeader(new BasicHeader("Content-Type","application/json"));
-            request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = client.execute(request);
-
-            int statusCode = response.getStatusLine().getStatusCode()
-
-            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            Object info = new JsonSlurper().parseText(responseBody)
-
-
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            assert statusCode == 200
-            assert info.id.toLong() == this.compId
-    }
+ */
 
     // ########################################################################
 

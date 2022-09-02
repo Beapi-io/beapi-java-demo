@@ -174,6 +174,7 @@ class AuthorityFunctionalTest extends Specification {
         then:"get user"
             assert statusCode == 200
             assert infoList == returnsList.intersect(infoList)
+        cleanup:
             authService.deleteById(info.id.toLong())
     }
 
