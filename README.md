@@ -9,8 +9,15 @@
 
 
 **Build**
+From the shell of the install directory, type:
 ```
 gradle clean;gradle build
+ ```
+ 
+ **Run
+ From the shell of the install directory, type:
+ ```
+ java -jar build/libs/java-demo-1.0.jar
  ```
  ---
 **Getting a Token** - 
@@ -29,9 +36,7 @@ curl -v -H "Content-Type: application/json" -H "Authorization: Bearer {your_toke
 ```
 NOTE:  appVersion can be found in your gradle.properties file as 'version'  
 
----
-**NOTE**
-Project is currently not properly flushing DB so chaining tests have been disabled until I add fix; you can test but you will have to hand remove values from DB.
+
 
 
 
