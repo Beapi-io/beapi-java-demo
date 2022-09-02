@@ -93,51 +93,6 @@ class BadApiFunctionalTest extends Specification {
             // todo : also check that ROLE_ADMIN response vars are not in keyset
     }
 
-    void "[testuser] GET api call (with good data)"() {
-        setup:"api is called"
-            println(" ")
-            println("[testuser] GET api call (with good data)")
-            String action = 'show'
-
-            LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
-
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-            this.appVersion = getVersion()
-            this.exchangeIntro = "v${this.appVersion}"
-
-            ArrayList returnsList = []
-            def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject.returns.permitAll.each(){ it ->
-                returnsList.add(it.name)
-            }
-
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
-
-            HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
-            HttpGet request = new HttpGet(url)
-            request.setHeader(new BasicHeader("Content-Type","application/json"));
-            request.setHeader(new BasicHeader("Authorization","Bearer "+this.testUserToken));
-            HttpResponse response = client.execute(request);
-
-            int statusCode = response.getStatusLine().getStatusCode()
-
-            println('statusCode : '+statusCode)
-
-            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            Object info = new JsonSlurper().parseText(responseBody)
-            ArrayList infoList = info.keySet()
-
-            println(info)
-
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
-            // todo : also check that ROLE_ADMIN response vars are not in keyset
-    }
-
     void "[testuser] GET api call (with BAD METHOD)"() {
         setup:"api is called"
             println(" ")
