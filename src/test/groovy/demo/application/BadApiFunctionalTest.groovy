@@ -95,8 +95,47 @@ class BadApiFunctionalTest extends Specification {
 
     void "[testuser] GET api call (with BAD METHOD)"() {
         setup:"api is called"
-            println(" ")
-            println("[testuser] GET api call (with BAD METHOD)")
+            String METHOD = "PUT"
+            String action = 'show'
+
+            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
+            String id = suUser['login']
+
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            this.appVersion = getVersion()
+            this.exchangeIntro = "v${this.appVersion}"
+
+            ArrayList returnsList = []
+            def apiObject = cache?."${this.apiVersion}"?."${action}"
+            apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
+
+            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
+            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+
+            //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
+
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+
+            HttpClient client = new DefaultHttpClient();
+            //URL uri = new URL(url);
+            HttpGet request = new HttpGet(url)
+            request.setHeader(new BasicHeader("Content-Type","application/json"));
+            request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
+            HttpResponse response = client.execute(request);
+
+            int statusCode = response.getStatusLine().getStatusCode()
+
+            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            Object info = new JsonSlurper().parseText(responseBody)
+
+        when:"info is not null"
+            assert responseBody!=[:]
+        then:"get user"
+            assert statusCode == 400
+    }
+
+    void "[testuser] GET api call (with BAD METHOD)"() {
+        setup:"api is called"
             String METHOD = "PUT"
             String action = 'show'
 
@@ -130,7 +169,7 @@ class BadApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
+
 
         when:"info is not null"
             assert responseBody!=[:]
@@ -138,91 +177,34 @@ class BadApiFunctionalTest extends Specification {
             assert statusCode == 400
     }
 
-    void "[testuser] GET api call (with BAD METHOD)"() {
-        setup:"api is called"
-        println(" ")
-        println("[testuser] GET api call (with BAD METHOD)")
-        String METHOD = "PUT"
-        String action = 'show'
-
-        LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-        String id = suUser['login']
-
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-        this.appVersion = getVersion()
-        this.exchangeIntro = "v${this.appVersion}"
-
-        ArrayList returnsList = []
-        def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
-
-        String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-
-        //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
-
-        String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
-
-        HttpClient client = new DefaultHttpClient();
-        //URL uri = new URL(url);
-        HttpGet request = new HttpGet(url)
-        request.setHeader(new BasicHeader("Content-Type","application/json"));
-        request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-        HttpResponse response = client.execute(request);
-
-        int statusCode = response.getStatusLine().getStatusCode()
-        println(statusCode)
-
-        String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info = new JsonSlurper().parseText(responseBody)
-        println(info)
-
-        when:"info is not null"
-        assert responseBody!=[:]
-        then:"get user"
-        assert statusCode == 400
-    }
-
     void "[testuser] GET api call (with NO ACTION)"() {
         setup:"api is called"
-        println(" ")
-        println("[testuser] GET api call (with NO ACTION)")
-        String METHOD = "PUT"
+            String METHOD = "PUT"
 
+            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
+            String id = suUser['login']
 
-        LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-        String id = suUser['login']
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            this.appVersion = getVersion()
+            this.exchangeIntro = "v${this.appVersion}"
 
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-        this.appVersion = getVersion()
-        this.exchangeIntro = "v${this.appVersion}"
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
 
-        //ArrayList returnsList = []
-        //def apiObject = cache?."${this.apiVersion}"?."${action}"
-        //apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
+            HttpClient client = new DefaultHttpClient();
 
-        //String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            HttpGet request = new HttpGet(url)
+            request.setHeader(new BasicHeader("Content-Type","application/json"));
+            request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
+            HttpResponse response = client.execute(request);
 
-        //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
+            int statusCode = response.getStatusLine().getStatusCode()
+            println(statusCode)
 
-        String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
-
-        HttpClient client = new DefaultHttpClient();
-        //URL uri = new URL(url);
-        HttpGet request = new HttpGet(url)
-        request.setHeader(new BasicHeader("Content-Type","application/json"));
-        request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-        HttpResponse response = client.execute(request);
-
-        int statusCode = response.getStatusLine().getStatusCode()
-        println(statusCode)
-
-        String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info
-        if(responseBody) {
-            info = new JsonSlurper().parseText(responseBody)
-        }
+            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            Object info
+            if(responseBody) {
+                info = new JsonSlurper().parseText(responseBody)
+            }
 
         when:"info is not null"
             assert info != null
@@ -232,47 +214,40 @@ class BadApiFunctionalTest extends Specification {
 
     void "[testuser] GET api call (with BAD data)"() {
         setup:"api is called"
-        println(" ")
-        println("[testuser] GET api call (with BAD data)")
-        String METHOD = "GET"
-        String action = 'show'
+            String METHOD = "GET"
+            String action = 'show'
 
-        LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-        String id = suUser['login']
+            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
+            String id = suUser['login']
 
-        LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-        this.appVersion = getVersion()
-        this.exchangeIntro = "v${this.appVersion}"
+            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            this.appVersion = getVersion()
+            this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
-        def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
+            ArrayList returnsList = []
+            def apiObject = cache?."${this.apiVersion}"?."${action}"
+            apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
 
-        String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
+            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-        //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
-        String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(url)
+            request.setHeader(new BasicHeader("Content-Type","application/json"));
+            request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
+            HttpResponse response = client.execute(request);
 
-        HttpClient client = new DefaultHttpClient();
-        //URL uri = new URL(url);
-        HttpGet request = new HttpGet(url)
-        request.setHeader(new BasicHeader("Content-Type","application/json"));
-        request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-        HttpResponse response = client.execute(request);
+            int statusCode = response.getStatusLine().getStatusCode()
 
-        int statusCode = response.getStatusLine().getStatusCode()
-        println(statusCode)
-
-        String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info = new JsonSlurper().parseText(responseBody)
-        println(info)
+            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            Object info = new JsonSlurper().parseText(responseBody)
 
         when:"info is not null"
-        assert responseBody!=[:]
+            assert responseBody!=[:]
         then:"get user"
-        assert statusCode == 400
+            assert statusCode == 400
     }
 
     private String getVersion() throws IOException {

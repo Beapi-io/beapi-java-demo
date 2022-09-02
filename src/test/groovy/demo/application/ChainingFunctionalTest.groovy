@@ -115,8 +115,6 @@ class ChainingFunctionalTest extends Specification {
     // company/create
     void "[superuser] POST create COMPANY"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] POST create COMPANY")
             String METHOD = "POST"
             String controller = 'company'
             String action = 'create'
@@ -140,7 +138,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -164,8 +161,6 @@ class ChainingFunctionalTest extends Specification {
     // company/show
     void "[superuser] GET show COMPANY"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] GET show COMPANY")
             String METHOD = "GET"
             String controller = 'company'
             String action = 'show'
@@ -184,7 +179,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -209,8 +203,6 @@ class ChainingFunctionalTest extends Specification {
     // branch/create
     void "[superuser] POST create BRANCH"() {
         setup:"api is called"
-            println(" ")
-            println(" [superuser] POSTcreate BRANCH ")
             String METHOD = "POST"
             String controller = 'branch'
             String action = 'create'
@@ -234,7 +226,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -259,8 +250,6 @@ class ChainingFunctionalTest extends Specification {
     void "[superuser] GET show BRANCH"() {
 
         setup:"api is called"
-            println(" ")
-            println("[superuser] GET show BRANCH")
             String METHOD = "GET"
             String controller = 'branch'
             String action = 'show'
@@ -279,7 +268,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -304,8 +292,6 @@ class ChainingFunctionalTest extends Specification {
     // dept/create
     void "[superuser] POST create DEPT"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] GET create DEPT")
             String METHOD = "POST"
             String controller = 'dept'
             String action = 'create'
@@ -329,7 +315,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -353,8 +338,6 @@ class ChainingFunctionalTest extends Specification {
     // dept/show
     void "[superuser] GET show DEPT"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] GET show DEPT")
             String METHOD = "GET"
             String controller = 'dept'
             String action = 'show'
@@ -373,7 +356,6 @@ class ChainingFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -384,7 +366,6 @@ class ChainingFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
-        println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -400,8 +381,6 @@ class ChainingFunctionalTest extends Specification {
 
     void "[superuser] API CHAINING(R) blankchain test"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] API CHAINING(R) blankchain test with '${this.deptId}'")
             String controller = 'dept'
             String action = 'show'
 
@@ -435,7 +414,6 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -448,8 +426,6 @@ class ChainingFunctionalTest extends Specification {
 
     void "[superuser] API CHAINING(R) postchain test"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] API CHAINING(R) postchain test")
             String controller = 'dept'
             String action = 'show'
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'postchain','order':['branch/show':'companyId','company/update':'return']]
@@ -483,7 +459,6 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -495,8 +470,6 @@ class ChainingFunctionalTest extends Specification {
 
     void "[superuser] API CHAINING(R) prechain test"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] API CHAINING(R) prechain test")
             String controller = 'dept'
             String action = 'update'
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'prechain','order':['branch/show':'companyId','company/show':'return']]
@@ -531,7 +504,6 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
 
         when:"info is not null"
             assert info!=[:]

@@ -74,7 +74,6 @@ class AuthorityFunctionalTest extends Specification {
 
     void "[superuser] login "(){
         setup:"logging in"
-
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
             String loginUri = "/authenticate"
             String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
@@ -99,8 +98,6 @@ class AuthorityFunctionalTest extends Specification {
 
     void "[superuser] GET list AUTHORITY"() {
         setup:"api is called"
-            println(" ")
-            println("[superuser] GET list AUTHORITY")
             String METHOD = "GET"
             String action = 'list'
 
@@ -118,7 +115,6 @@ class AuthorityFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
@@ -128,8 +124,6 @@ class AuthorityFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-println(info)
-
         when:"info is not null"
             assert info!=[:]
         then:"get user"
@@ -141,17 +135,13 @@ println(info)
 
 
     void "[superuser] POST create AUTHORITY"() {
-        println(" ")
-        println("[superuser]  POST create AUTHORITY")
         setup:"api is called"
         String METHOD = "POST"
         String action = 'create'
 
-
         LinkedHashMap data = ['authority':'ROLE_TEST']
         String json = JsonOutput.toJson(data)
         HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
-
 
         LinkedHashMap cache = apiCacheService.getApiCache(controller)
         this.appVersion = getVersion()
@@ -167,9 +157,7 @@ println(info)
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
         HttpClient client = new DefaultHttpClient();
-        //URL uri = new URL(url);
         HttpPost request = new HttpPost(url)
-        //request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
         request.setEntity(stringEntity);
         HttpResponse response = client.execute(request);
@@ -179,7 +167,6 @@ println(info)
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
         ArrayList infoList = info.keySet()
-println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -187,54 +174,8 @@ println(info)
         then:"get user"
             assert statusCode == 200
             assert infoList == returnsList.intersect(infoList)
-            println(" ")
-            println("[superuser]  authservice deleteById")
             authService.deleteById(info.id.toLong())
     }
-
-/*
-    void "[superuser] DELETE delete AUTHORITY"() {
-        setup:"api is called"
-            String METHOD = "GET"
-            String action = ''
-
-            LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-            this.appVersion = getVersion()
-            this.exchangeIntro = "v${this.appVersion}"
-
-            ArrayList returnsList = []
-            def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
-            String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${this.authorityId}" as String
-
-            HttpClient client = new DefaultHttpClient();
-            //URL uri = new URL(url);
-            HttpDelete request = new HttpDelete(url)
-            request.setHeader(new BasicHeader("Content-Type","application/json"));
-            request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = client.execute(request);
-
-            int statusCode = response.getStatusLine().getStatusCode()
-
-            String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            Object info = new JsonSlurper().parseText(responseBody)
-
-
-        when:"info is not null"
-            assert info!=[:]
-        then:"get user"
-            info.each(){ it ->
-                ArrayList infoList = it.keySet()
-                assert infoList == returnsList.intersect(infoList)
-            }
-    }
-
- */
-
 
     private String getVersion() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
