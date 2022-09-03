@@ -17,7 +17,7 @@ gradle clean;gradle build
  **Run
  From the shell of the install directory, type:
  ```
- java -jar build/libs/java-demo-1.0.jar
+ java -jar build/libs/beapi-java-demo-1.0.jar
  ```
  ---
 **Getting a Token** - 
