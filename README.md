@@ -8,14 +8,12 @@
 **Configuration** -  Follow instructions in documentation for [installation/configuration](https://beapi-io.github.io/spring-boot-starter-beapi/index.html#section-2)
 
 
-**Build**
-From the shell of the install directory, type:
+**Build** - From the shell of the install directory, type:
 ```
 gradle clean;gradle build
  ```
  
- **Run**
- From the shell of the install directory, type:
+ **Run** - From the shell of the install directory, type:
  ```
  java -jar build/libs/beapi-java-demo-1.0.jar
  ```
