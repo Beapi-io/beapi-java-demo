@@ -42,7 +42,7 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 
-	implementation 'io.beapi:spring-boot-starter-beapi:0.5'
+	implementation 'io.beapi:spring-boot-starter-beapi:0.5.1'
 
 	implementation 'org.springframework.boot:spring-boot-starter-tomcat:2.7.0'
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
