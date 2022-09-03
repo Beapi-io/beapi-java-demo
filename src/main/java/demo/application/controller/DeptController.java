@@ -34,9 +34,7 @@ public class DeptController extends BeapiController{
 
 
 	public Dept create(HttpServletRequest request, HttpServletResponse response){
-
-		Branch branch = branchService.findById(Long.valueOf(params.get("branchId").toString()));
-
+		Branch branch = branchService.findById(Long.valueOf(params.get("branchId")));
 		if(Objects.nonNull(branch)) {
 			Dept dept = new Dept();
 			dept.setName(params.get("name"));
@@ -66,7 +64,6 @@ public class DeptController extends BeapiController{
 
 	public LinkedHashMap delete(HttpServletRequest request, HttpServletResponse response) {
 		Dept dept;
-
 		Long id = Long.parseLong(params.get("id"));
 		dept = deptService.findById(id);
 		if(Objects.nonNull(dept)){

@@ -22,10 +22,7 @@ public class BranchController extends BeapiController{
 	private CompanyService compService;
 
 	public Branch show(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("branch/show");
-		System.out.println(params);
 		Long id = Long.parseLong(this.params.get("id").toString());
-		System.out.println("id : "+id);
 		Branch branch = branchService.findById(id);
 
 		if (Objects.nonNull(branch)) {
@@ -41,7 +38,7 @@ public class BranchController extends BeapiController{
 
 		if(Objects.nonNull(comp)) {
 			Branch branch = new Branch();
-			branch.setName(this.params.get("name"));
+			branch.setName(params.get("name"));
 			branch.setCompanyId(comp);
 			return branchService.save(branch);
 		}else{

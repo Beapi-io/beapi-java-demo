@@ -20,6 +20,7 @@ public class CompanyService implements ICompany {
     //@Override
     public demo.application.domain.Company save(demo.application.domain.Company company){
         // TODO Auto-generated method stub
+
         comprepo.save(company);
         comprepo.flush();
         return company;

@@ -29,15 +29,15 @@ public class AuthorityController extends BeapiController{
 	}
 
 	public Authority create(HttpServletRequest request, HttpServletResponse response){
-			String authority = this.params.get("authority");
+		String authority = this.params.get("authority");
 
-			Authority auth = authService.findByAuthority(authority);
-			if(!Objects.nonNull(auth)){
-                Authority newAuth = new Authority();;
-                newAuth.setAuthority(authority);
-                return authService.save(newAuth);
-			}
-			return null;
+		Authority auth = authService.findByAuthority(authority);
+		if(!Objects.nonNull(auth)){
+			Authority newAuth = new Authority();;
+			newAuth.setAuthority(authority);
+			return authService.save(newAuth);
+		}
+		return null;
 	}
 
 /*

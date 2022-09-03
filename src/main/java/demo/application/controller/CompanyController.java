@@ -28,11 +28,11 @@ public class CompanyController extends BeapiController{
 
 
 	public Company create(HttpServletRequest request, HttpServletResponse response){
-			Company comp = new Company();
-			comp.setName(params.get("name"));
+		Company comp = new Company();
+		comp.setName(params.get("name"));
 
-			// todo : need rollback upon fail
-			return compService.save(comp);
+		// todo : need rollback upon fail
+		return compService.save(comp);
 	}
 
 	public Company update(HttpServletRequest request, HttpServletResponse response){

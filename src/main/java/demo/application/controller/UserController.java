@@ -41,7 +41,6 @@ public class UserController extends BeapiController {
 	}
 
 	public User show(HttpServletRequest request, HttpServletResponse response){
-
 			String username;
 			if(principle.isSuperuser()){
 				username = (Objects.nonNull(params.get("id")))?(params.get("id")):principle.name().toString();

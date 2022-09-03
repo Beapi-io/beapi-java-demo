@@ -100,6 +100,7 @@ class ApiFunctionalTest extends Specification {
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println("info : "+info)
 
         when:"info is not null"
             this.testUserToken = info.token
@@ -111,6 +112,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[testuser] GET api call (with good data)"() {
         setup:"api is called"
+            println(" ")
+            println("[testuser] GET api call (with good data)")
             String action = 'show'
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
@@ -136,6 +139,7 @@ class ApiFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
+            println("info : "+info)
 
         when:"info is not null"
             assert info!=[:]
@@ -164,6 +168,7 @@ class ApiFunctionalTest extends Specification {
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println("info : "+info)
 
         when:"info is not null"
             this.adminUserToken = info.token
@@ -173,6 +178,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[superuser] GET USER api call without ID param"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET USER api call without ID param")
             String METHOD = "GET"
             String action = 'show'
 
@@ -202,6 +209,7 @@ class ApiFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
+            println("info : "+info)
 
         when:"info is not null"
             assert info!=[:]
@@ -213,6 +221,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[superuser] GET USER api call with ID param"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET USER api call with ID param")
             String METHOD = "GET"
             String action = 'show'
 
@@ -243,6 +253,7 @@ class ApiFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
+            println("info : "+info)
 
         when:"info is not null"
             assert info!=[:]
@@ -253,6 +264,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[superuser] GET USER api call with ID param (BAD DATA)"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET USER api call with ID param (BAD DATA)")
             String METHOD = "GET"
             String action = 'show'
 
@@ -278,6 +291,7 @@ class ApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println("info : "+info)
 
         when:"error message has been thrown"
             assert !info.isEmpty() && info.status != 200
@@ -288,6 +302,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[superuser] GET list api call : [domain objects]"() {
         setup:"api is called"
+            println(" ")
+            println("[superuser] GET list api call : [domain objects]")
             String METHOD = "GET"
             String action = 'list'
 
@@ -313,6 +329,7 @@ class ApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+            println("info : "+info)
 
         when:"info is not null"
             assert info!=[:]
