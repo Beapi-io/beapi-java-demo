@@ -5,7 +5,7 @@ import demo.application.domain.UserAuthority;
 import demo.application.service.AuthorityService;
 import demo.application.service.UserAuthorityService;
 import io.beapi.api.service.PrincipleService;
-import io.beapi.api.controller.BeapiController;
+import io.beapi.api.controller.BeapiRequestHandler;
 import demo.application.domain.User;
 import demo.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
-public class UserController extends BeapiController {
+@Controller("user")
+public class UserController extends BeapiRequestHandler{
 
 	@Autowired
 	public PasswordEncoder passwordEncoder;
@@ -43,7 +43,7 @@ public class UserController extends BeapiController {
 	public User show(HttpServletRequest request, HttpServletResponse response){
 			String username;
 			if(principle.isSuperuser()){
-				username = (Objects.nonNull(params.get("id")))?(params.get("id")):principle.name().toString();
+				username = (Objects.nonNull(this.params.get("id")))?(this.params.get("id")):principle.name().toString();
 			}else {
 				username = principle.name();
 			}

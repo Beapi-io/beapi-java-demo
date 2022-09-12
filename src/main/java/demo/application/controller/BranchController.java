@@ -4,7 +4,7 @@ import demo.application.domain.Branch;
 import demo.application.domain.Company;
 import demo.application.service.BranchService;
 import demo.application.service.CompanyService;
-import io.beapi.api.controller.BeapiController;
+import io.beapi.api.controller.BeapiRequestHandler;
 import io.beapi.api.properties.ApiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-@Controller
-public class BranchController extends BeapiController{
+@Controller("branch")
+public class BranchController extends BeapiRequestHandler{
 
 	@Autowired
 	private BranchService branchService;
@@ -22,7 +22,7 @@ public class BranchController extends BeapiController{
 	private CompanyService compService;
 
 	public Branch show(HttpServletRequest request, HttpServletResponse response){
-		Long id = Long.parseLong(this.params.get("id").toString());
+		Long id = Long.parseLong(params.get("id").toString());
 		Branch branch = branchService.findById(id);
 
 		if (Objects.nonNull(branch)) {
@@ -34,11 +34,11 @@ public class BranchController extends BeapiController{
 
 
 	public Branch create(HttpServletRequest request, HttpServletResponse response){
-		Company comp = compService.findById(Long.valueOf(params.get("companyId").toString()));
+		Company comp = compService.findById(Long.valueOf(this.params.get("companyId")));
 
 		if(Objects.nonNull(comp)) {
 			Branch branch = new Branch();
-			branch.setName(params.get("name"));
+			branch.setName(this.params.get("name"));
 			branch.setCompanyId(comp);
 			return branchService.save(branch);
 		}else{
@@ -49,7 +49,7 @@ public class BranchController extends BeapiController{
 
 	public LinkedHashMap delete(HttpServletRequest request, HttpServletResponse response) {
 		Branch branch;
-		Long id = Long.valueOf(params.get("id"));
+		Long id = Long.valueOf(this.params.get("id"));
 
 		branch = branchService.findById(id);
 		if(Objects.nonNull(branch)){

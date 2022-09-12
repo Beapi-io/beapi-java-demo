@@ -179,6 +179,8 @@ class BadApiFunctionalTest extends Specification {
 
     void "[testuser] GET api call (with NO ACTION)"() {
         setup:"api is called"
+            println("")
+            println("[testuser] GET api call (with NO ACTION)")
             String METHOD = "PUT"
 
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
@@ -191,7 +193,6 @@ class BadApiFunctionalTest extends Specification {
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
 
             HttpClient client = new DefaultHttpClient();
-
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));

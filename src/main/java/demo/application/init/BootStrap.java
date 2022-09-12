@@ -13,12 +13,16 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import io.beapi.api.properties.ApiProperties;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Component
 public class BootStrap {
+
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -29,8 +33,6 @@ public class BootStrap {
     @Autowired
     ApiProperties apiProperties;
 
-    @Autowired
-    public BuildProperties buildProperties;
 
     @Autowired
     private AuthorityService authService;
@@ -44,7 +46,6 @@ public class BootStrap {
     LinkedHashMap testLoadOrder = new LinkedHashMap();
 
 
-    //void init(ApplicationContext applicationContext,ApiProperties apiProperties) {
     public void init(ApplicationContext applicationContext) {
 
         // START BOOTSTRAP AUTHORITIES

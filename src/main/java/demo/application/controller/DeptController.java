@@ -4,7 +4,7 @@ import demo.application.domain.Branch;
 import demo.application.domain.Dept;
 import demo.application.service.BranchService;
 import demo.application.service.DeptService;
-import io.beapi.api.controller.BeapiController;
+import io.beapi.api.controller.BeapiRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 
-@Controller
-public class DeptController extends BeapiController{
+@Controller("dept")
+public class DeptController extends BeapiRequestHandler{
 
 	@Autowired
 	private BranchService branchService;
@@ -22,7 +22,7 @@ public class DeptController extends BeapiController{
 	private DeptService deptService;
 
 	public Dept show(HttpServletRequest request, HttpServletResponse response){
-		Long id = Long.valueOf(params.get("id"));
+		Long id = Long.valueOf(this.params.get("id"));
 		Dept dept = deptService.findById(id);
 
 		if (Objects.nonNull(dept)) {
@@ -34,10 +34,10 @@ public class DeptController extends BeapiController{
 
 
 	public Dept create(HttpServletRequest request, HttpServletResponse response){
-		Branch branch = branchService.findById(Long.valueOf(params.get("branchId")));
+		Branch branch = branchService.findById(Long.valueOf(this.params.get("branchId")));
 		if(Objects.nonNull(branch)) {
 			Dept dept = new Dept();
-			dept.setName(params.get("name"));
+			dept.setName(this.params.get("name"));
 			dept.setBranchId(branch);
 			return deptService.save(dept);
 		}else{
@@ -48,11 +48,11 @@ public class DeptController extends BeapiController{
 	}
 
 	public Dept update(HttpServletRequest request, HttpServletResponse response){
-		Long id = Long.parseLong(params.get("id"));
+		Long id = Long.parseLong(this.params.get("id"));
 		Dept dept = deptService.findById(id);
 
 		if (Objects.nonNull(dept)) {
-			dept.setName(params.get("name"));
+			dept.setName(this.params.get("name"));
 
 			// todo : need rollback upon fail
 			if(Objects.nonNull(deptService.save(dept))){
@@ -64,7 +64,7 @@ public class DeptController extends BeapiController{
 
 	public LinkedHashMap delete(HttpServletRequest request, HttpServletResponse response) {
 		Dept dept;
-		Long id = Long.parseLong(params.get("id"));
+		Long id = Long.parseLong(this.params.get("id"));
 		dept = deptService.findById(id);
 		if(Objects.nonNull(dept)){
 			deptService.deleteById(id);

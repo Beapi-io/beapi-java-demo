@@ -5,7 +5,7 @@ import demo.application.service.AuthorityService;
 import demo.application.service.JwtUserDetailsService;
 import demo.application.service.UserAuthorityService;
 import demo.application.service.UserService;
-import io.beapi.api.controller.BeapiController;
+import io.beapi.api.controller.BeapiRequestHandler;
 import io.beapi.api.properties.ApiProperties;
 import io.beapi.api.service.PrincipleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 
-@Controller
-public class AuthorityController extends BeapiController{
+@Controller("authority")
+public class AuthorityController extends BeapiRequestHandler{
 
 	@Autowired
 	private AuthorityService authService;

@@ -1,6 +1,10 @@
 buildscript {
 	repositories {
+		mavenLocal()
 		mavenCentral()
+		maven {
+			url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+		}
 	}
 }
 
@@ -19,14 +23,10 @@ apply plugin: 'application'
 sourceCompatibility = "${sourceCompatibility}"
 
 repositories {
-	//mavenLocal()
+	mavenLocal()
 	mavenCentral()
 	maven {
-		url = uri("https://maven.pkg.github.com/orubel/spring-boot-starter-beapi")
-		credentials {
-			username = 'orubel'
-			password = System.getenv("TOKEN")
-		}
+		url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
 	}
 }
 
@@ -42,7 +42,8 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 
-	implementation 'io.beapi:spring-boot-starter-beapi:0.5.1'
+	//implementation 'io.beapi:spring-boot-starter-beapi:0.5.1'
+	implementation 'io.beapi:spring-boot-starter-beapi:0.6.0-SNAPSHOT'
 
 	implementation 'org.springframework.boot:spring-boot-starter-tomcat:2.7.0'
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
