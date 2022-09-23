@@ -38,8 +38,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private ApiProperties apiProperties;
 
-	//@Autowired
-	//private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	private demo.application.service.JwtTokenUtil jwtTokenUtil;
@@ -56,6 +54,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		// TODO : make sure they are not logging in/ logging out else will throw logger.warn message
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
+
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {

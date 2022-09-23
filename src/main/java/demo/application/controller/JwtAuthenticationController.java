@@ -2,7 +2,6 @@ package demo.application.controller;
 
 import demo.application.domain.JwtRequest;
 import demo.application.domain.JwtResponse;
-import demo.application.service.JwtUserDetailsService;
 import demo.application.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
-
+import demo.application.service.JwtTokenUtil;
 
 @RestController
 @CrossOrigin

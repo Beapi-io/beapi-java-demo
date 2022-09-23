@@ -13,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import org.json.JSONObject;
 
 @Component
 public class JwtTokenUtil implements Serializable {
