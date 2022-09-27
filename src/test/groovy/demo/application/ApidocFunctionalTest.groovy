@@ -160,6 +160,7 @@ class ApidocFunctionalTest extends Specification {
             assert info.token!=[:]
     }
 
+
     void "[superuser] GET ADMIN apidocs"() {
         setup:"apidocs called"
             String action = 'show'
@@ -193,7 +194,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList == ['company', 'dept', 'branch', 'user', 'apidoc', 'authority']
+            assert infoList == ['authority', 'iostate', 'company', 'dept', 'branch', 'user', 'apidoc']
     }
 
 

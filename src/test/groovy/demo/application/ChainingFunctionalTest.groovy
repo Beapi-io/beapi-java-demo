@@ -396,9 +396,6 @@ class ChainingFunctionalTest extends Specification {
     }
 
 
-
-/*
-
     void "[superuser] API CHAINING(R) blankchain test"() {
         setup:"api is called"
             println(" ")
@@ -540,7 +537,7 @@ class ChainingFunctionalTest extends Specification {
             assert statusCode == 200
             assert info.size() == 3
     }
-    */
+
 
 
     void "Cleaning up data"() {
