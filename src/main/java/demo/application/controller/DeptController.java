@@ -49,10 +49,12 @@ public class DeptController extends BeapiRequestHandler{
 
 	public Dept update(HttpServletRequest request, HttpServletResponse response){
 		Long id = Long.parseLong(this.params.get("id"));
+
 		Dept dept = deptService.findById(id);
 
 		if (Objects.nonNull(dept)) {
-			dept.setName(this.params.get("name"));
+			System.out.println(this.params.get("name"));
+			dept.setName(this.params.get("name").toString());
 
 			// todo : need rollback upon fail
 			if(Objects.nonNull(deptService.save(dept))){

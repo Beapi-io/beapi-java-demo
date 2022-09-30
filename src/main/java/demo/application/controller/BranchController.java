@@ -34,6 +34,7 @@ public class BranchController extends BeapiRequestHandler{
 
 
 	public Branch create(HttpServletRequest request, HttpServletResponse response){
+		System.out.println("### branch/create : "+this.params.get("companyId"));
 		Company comp = compService.findById(Long.valueOf(this.params.get("companyId")));
 
 		if(Objects.nonNull(comp)) {

@@ -37,6 +37,8 @@ public class CompanyController extends BeapiRequestHandler{
 
 	public Company update(HttpServletRequest request, HttpServletResponse response){
 		Long id = Long.parseLong(this.params.get("id"));
+		System.out.println("id : "+id);
+
 		Company comp = compService.findById(id);
 
 		if (Objects.nonNull(comp)) {
