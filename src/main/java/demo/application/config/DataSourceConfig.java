@@ -35,8 +35,8 @@ public class DataSourceConfig {
         config.setUsername(datasourceProperties.getUsername());
         config.setPassword(datasourceProperties.getPassword());
         config.setMinimumIdle(0);
-        config.setConnectionTimeout(30000);
-        config.setIdleTimeout(35000);
+        config.setConnectionTimeout(3000);
+        config.setIdleTimeout(3500);
         config.setMaxLifetime(45000);
         config.setAutoCommit(true);
         config.setValidationTimeout(5000);

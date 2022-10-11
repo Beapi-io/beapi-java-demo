@@ -136,6 +136,8 @@ class AuthorityFunctionalTest extends Specification {
 
     void "[superuser] POST create AUTHORITY"() {
         setup:"api is called"
+        println(" ")
+        println("[superuser] POST create AUTHORITY")
         String METHOD = "POST"
         String action = 'create'
 
@@ -166,6 +168,8 @@ class AuthorityFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
+        println(info)
+
         ArrayList infoList = info.keySet()
 
         when:"info is not null"

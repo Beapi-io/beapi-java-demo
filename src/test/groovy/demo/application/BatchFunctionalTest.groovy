@@ -110,6 +110,8 @@ class BatchFunctionalTest extends Specification {
 
     void "[superuser] POST create AUTHORITY"() {
         setup:"api is called"
+            println("")
+            println("### POST create AUTHORITY")
             String METHOD = "POST"
             String action = 'create'
 
@@ -147,7 +149,7 @@ class BatchFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-
+            println(info)
 
         when:"info is not null"
             assert info!=[:]

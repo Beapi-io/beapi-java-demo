@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
@@ -86,6 +87,7 @@ class BadApiFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
+
         when:"info is not null"
             this.testUserToken = info.token
         then:"assert token is not null"
@@ -95,11 +97,12 @@ class BadApiFunctionalTest extends Specification {
 
     void "[testuser] GET api call (with BAD METHOD)"() {
         setup:"api is called"
+            println(" ")
+            println("[testuser] GET api call (with BAD METHOD)")
             String METHOD = "PUT"
             String action = 'show'
-
-            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-            String id = suUser['login']
+            LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
+            String id = testUser['login']
 
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             this.appVersion = getVersion()
@@ -118,7 +121,7 @@ class BadApiFunctionalTest extends Specification {
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
-            HttpGet request = new HttpGet(url)
+            HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
             HttpResponse response = client.execute(request);
@@ -127,6 +130,8 @@ class BadApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+        println(info)
+        println(statusCode)
 
         when:"info is not null"
             assert responseBody!=[:]
@@ -134,13 +139,15 @@ class BadApiFunctionalTest extends Specification {
             assert statusCode == 400
     }
 
-    void "[testuser] GET api call (with BAD METHOD)"() {
+    void "[testuser] GET api call (with BAD METHOD -2)"() {
         setup:"api is called"
+            println(" ")
+            println("[testuser] GET api call (with BAD METHOD - 2)")
             String METHOD = "PUT"
             String action = 'show'
 
-            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-            String id = suUser['login']
+            LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
+            String id = testUser['login']
 
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             this.appVersion = getVersion()
@@ -155,11 +162,11 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
-            HttpGet request = new HttpGet(url)
+            HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
             HttpResponse response = client.execute(request);
@@ -170,11 +177,10 @@ class BadApiFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
-
         when:"info is not null"
             assert responseBody!=[:]
         then:"get user"
-            assert statusCode == 400
+            assert statusCode == 405
     }
 
     void "[testuser] GET api call (with NO ACTION)"() {
@@ -183,8 +189,8 @@ class BadApiFunctionalTest extends Specification {
             println("[testuser] GET api call (with NO ACTION)")
             String METHOD = "PUT"
 
-            LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
-            String id = suUser['login']
+            LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
+            String id = testUser['login']
 
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
             this.appVersion = getVersion()
@@ -199,22 +205,24 @@ class BadApiFunctionalTest extends Specification {
             HttpResponse response = client.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
-            println(statusCode)
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info
             if(responseBody) {
                 info = new JsonSlurper().parseText(responseBody)
+                println(info)
             }
 
         when:"info is not null"
             assert info != null
         then:"get user"
-            assert statusCode == 401
+            assert statusCode == 200
     }
 
     void "[testuser] GET api call (with BAD data)"() {
         setup:"api is called"
+            println(" ")
+            println("[testuser] GET api call (with BAD data)")
             String METHOD = "GET"
             String action = 'show'
 

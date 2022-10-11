@@ -45,6 +45,7 @@ public class UserController extends BeapiRequestHandler{
 			if(principle.isSuperuser()){
 				username = (Objects.nonNull(this.params.get("id")))?(this.params.get("id")):principle.name().toString();
 			}else {
+				System.out.println("ignoring id....");
 				username = principle.name();
 			}
 
