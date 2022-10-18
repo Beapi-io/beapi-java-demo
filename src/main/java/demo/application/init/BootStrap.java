@@ -20,6 +20,14 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
+import javax.crypto.spec.GCMParameterSpec;
+
 @Component
 public class BootStrap {
 
@@ -47,7 +55,6 @@ public class BootStrap {
 
 
     public void init(ApplicationContext applicationContext) {
-
         // START BOOTSTRAP AUTHORITIES
         ArrayList<String> roles = new ArrayList();
         roles.add(apiProperties.getSecurity().getSuperuserRole());
@@ -138,6 +145,32 @@ public class BootStrap {
                 }
             }
         }
+    }
+
+
+    public static byte[] gcmEncrypt(String input, SecretKey key, byte[] IV) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+        // Create SecretKeySpec
+        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(96, IV);
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmParameterSpec);
+
+        byte[] cipherText = cipher.doFinal(input.getBytes());
+        return cipherText;
+    }
+
+    public static String gcmDecrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
+        // Get Cipher Instance
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+        // Create SecretKeySpec
+        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(96, IV);
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmParameterSpec);
+
+        byte[] decryptedText = cipher.doFinal(cipherText);
+        return new String(decryptedText);
     }
 
 }

@@ -141,7 +141,7 @@ class AuthorityFunctionalTest extends Specification {
         String METHOD = "POST"
         String action = 'create'
 
-        LinkedHashMap data = ['authority':'ROLE_TEST']
+        LinkedHashMap data = ['authority':'ROLE_TEST99']
         String json = JsonOutput.toJson(data)
         HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -168,7 +168,7 @@ class AuthorityFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println(info)
+
 
         ArrayList infoList = info.keySet()
 

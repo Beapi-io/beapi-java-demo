@@ -1,5 +1,6 @@
 package demo.application.service;
 
+import demo.application.domain.Branch;
 import demo.application.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class UserService implements IUser {
     public User findByUsername(String username) {
         return userrepo.findByUsername(username);
     }
+
     @Override
     public User save(User usr) {
         userrepo.save(usr);
