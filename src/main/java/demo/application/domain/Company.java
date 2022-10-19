@@ -1,15 +1,15 @@
 package demo.application.domain;
 
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "company")
-@Getter
-@Setter
+//@Getter
+//@Setter
 public class Company implements Serializable {
 
 	private static final long serialVersionUID = 1L;

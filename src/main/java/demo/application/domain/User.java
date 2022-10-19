@@ -1,6 +1,6 @@
 package demo.application.domain;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+//import org.hibernate.annotations.CacheConcurrencyStrategy;
 import java.io.Serializable;
 import javax.persistence.*;
 //import lombok.Getter;
