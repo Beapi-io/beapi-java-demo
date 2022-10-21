@@ -10,11 +10,10 @@ buildscript {
 
 plugins {
 	id 'application'
-	id 'org.springframework.boot'
-	id 'io.spring.dependency-management'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'groovy'
 	id 'java'
-	//id "ca.cutterslade.analyze"
 }
 
 description = "Java Demo Application for beapi-spring-boot-starter"
@@ -92,8 +91,8 @@ dependencies {
 
 application {
 	mainClass = 'demo.application.Application'
-	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=150 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
-	applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=150 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=3 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
+	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=300 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom"]
+	applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
 }
 
 
