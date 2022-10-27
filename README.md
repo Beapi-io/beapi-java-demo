@@ -3,7 +3,7 @@
 
 **Springboot Version** - 2.6.2 (or greater)
 
-**JVM** - 17 
+**JVM** - 17 (can work on 1.8 but have to change GC)
 
 **Configuration** -  Follow instructions in documentation for [installation/configuration](https://beapi-io.github.io/spring-boot-starter-beapi/index.html#section-2)
 
