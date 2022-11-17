@@ -124,8 +124,6 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['name':'Spamazon']
             String json = JsonOutput.toJson(data)
-        println(json)
-
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
 
@@ -141,7 +139,6 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
-        println(url)
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -221,8 +218,6 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['name':'Spamazon Branch','companyId':this.compId]
             String json = JsonOutput.toJson(data)
-            println(json)
-
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
 
@@ -238,7 +233,6 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
-            println(url)
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -334,7 +328,6 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
-        println(url)
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -412,8 +405,6 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['chain':['initdata':'branchId','chaintype':'blankchain','order':['branch/show':'companyId','company/show':'return']]]
             String json = JsonOutput.toJson(data)
-            println(json)
-
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
@@ -428,7 +419,6 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
-        println(url)
 
             HttpClient client = new DefaultHttpClient();
 
@@ -463,7 +453,6 @@ class ChainingFunctionalTest extends Specification {
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'postchain','order':['branch/show':'companyId','company/update':'return']]
             LinkedHashMap data = ['id':this.compId,'name':'YabbaDabbaDooazon','chain': chainData]
             String json = JsonOutput.toJson(data)
-            println(json)
 
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -479,7 +468,6 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
-        println(url)
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -512,7 +500,6 @@ class ChainingFunctionalTest extends Specification {
             LinkedHashMap chainData = ['initdata':'branchId','chaintype':'prechain','order':['branch/show':'companyId','company/show':'return']]
             LinkedHashMap data = ['id':this.deptId,'name':'YabbaDabbaDoo Dept','chain': chainData]
             String json = JsonOutput.toJson(data)
-            println(json)
 
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -528,7 +515,7 @@ class ChainingFunctionalTest extends Specification {
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
-        println(url)
+
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -574,9 +561,8 @@ class ChainingFunctionalTest extends Specification {
             //assert dept==null
         then: "delete all"
             assert true
+
     }
-
-
 
 
     // ########################################################################
