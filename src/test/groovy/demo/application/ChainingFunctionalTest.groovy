@@ -124,6 +124,7 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['name':'Spamazon']
             String json = JsonOutput.toJson(data)
+
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
 
@@ -218,6 +219,7 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['name':'Spamazon Branch','companyId':this.compId]
             String json = JsonOutput.toJson(data)
+
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
 
@@ -311,7 +313,6 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['name':"Spam Dept",'branchId':"${this.branchId}"]
             String json = JsonOutput.toJson(data)
-        println(json)
 
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -329,6 +330,7 @@ class ChainingFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
+
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
@@ -342,7 +344,6 @@ class ChainingFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
-            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -386,7 +387,7 @@ class ChainingFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
-        println(info)
+
 
         when:"info is not null"
             assert info!=[:]
@@ -405,6 +406,8 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap data = ['chain':['initdata':'branchId','chaintype':'blankchain','order':['branch/show':'companyId','company/show':'return']]]
             String json = JsonOutput.toJson(data)
+
+
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
@@ -420,6 +423,7 @@ class ChainingFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
+
             HttpClient client = new DefaultHttpClient();
 
             // NOTE : we have to use HttpPost because it won't allow sending formdata in HttpGet
@@ -433,7 +437,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
+
 
         when:"info is not null"
             assert info!=[:]
@@ -454,6 +458,7 @@ class ChainingFunctionalTest extends Specification {
             LinkedHashMap data = ['id':this.compId,'name':'YabbaDabbaDooazon','chain': chainData]
             String json = JsonOutput.toJson(data)
 
+
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
@@ -469,6 +474,7 @@ class ChainingFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
+
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
@@ -481,7 +487,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println(info)
+
 
         when:"info is not null"
             assert info!=[:]
@@ -489,6 +495,7 @@ class ChainingFunctionalTest extends Specification {
             assert statusCode == 200
             assert info.size() == 3
     }
+
 
 
     void "[superuser] API CHAINING(R) prechain test"() {
@@ -516,7 +523,6 @@ class ChainingFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
-
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
@@ -537,6 +543,9 @@ class ChainingFunctionalTest extends Specification {
             assert statusCode == 200
             assert info.size() == 3
     }
+
+
+
 
 
 
@@ -561,8 +570,9 @@ class ChainingFunctionalTest extends Specification {
             //assert dept==null
         then: "delete all"
             assert true
-
     }
+
+
 
 
     // ########################################################################

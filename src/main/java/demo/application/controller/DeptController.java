@@ -24,14 +24,12 @@ public class DeptController extends BeapiRequestHandler{
 	public Dept show(HttpServletRequest request, HttpServletResponse response){
 		Long id = Long.valueOf(this.params.get("id"));
 		Dept dept = deptService.findById(id);
-
 		if (Objects.nonNull(dept)) {
 			return dept;
 		} else {
 			return null;
 		}
     }
-
 
 	public Dept create(HttpServletRequest request, HttpServletResponse response){
 		Branch branch = branchService.findById(Long.valueOf(this.params.get("branchId")));
@@ -49,11 +47,8 @@ public class DeptController extends BeapiRequestHandler{
 
 	public Dept update(HttpServletRequest request, HttpServletResponse response){
 		Long id = Long.parseLong(this.params.get("id"));
-
 		Dept dept = deptService.findById(id);
-
 		if (Objects.nonNull(dept)) {
-			System.out.println(this.params.get("name"));
 			dept.setName(this.params.get("name").toString());
 
 			// todo : need rollback upon fail
