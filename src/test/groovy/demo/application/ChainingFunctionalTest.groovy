@@ -437,7 +437,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-
+            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -487,7 +487,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-
+            println(info)
 
         when:"info is not null"
             assert info!=[:]
@@ -535,7 +535,7 @@ class ChainingFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-
+            println(info)
 
         when:"info is not null"
             assert info!=[:]
