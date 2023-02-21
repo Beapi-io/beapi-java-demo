@@ -126,7 +126,7 @@ task copySourceJars(type: Copy) {
 	into file("${project.projectDir.getAbsolutePath()}/lib")
 }
 
-task copyCLI(type: Copy){
+task copyCLI(type: Sync){
 	from zipTree("${project.projectDir.getAbsolutePath()}/lib/spring-boot-starter-beapi-0.6.0-SNAPSHOT-sources.jar")
 	include("Beapi.groovy")
 	into file("${project.projectDir.getAbsolutePath()}/lib")
