@@ -19,18 +19,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
+import java.util.stream.StreamSupport;
 import javax.crypto.spec.GCMParameterSpec;
+
 
 @Component
 public class BootStrap {
-
 
     @Autowired
     public PasswordEncoder passwordEncoder;
