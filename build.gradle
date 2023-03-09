@@ -119,37 +119,6 @@ jar {
 }
 
 
-build {
-	println System.getProperty('controller')
-}
-
-
-/*
-* Start Block for CLI
-*/
-if (project.hasProperty("args")) {
-	ext.cmdargs = project.getProperty("args")
-} else {
-	ext.cmdargs = ""
-}
-
-// --Pscaffold="controller=package.name, domain=full.class.name"
-// --Pscaffold="connector=package.name, domain=full.class.name"
-// --Pargs="connector=package.name, domain=full.class.name"
-task scaffold(type: JavaExec) {
-	test {
-		exclude '**/*'
-	}
-	group = "Execution"
-	description = "Run the main class with JavaExecTask"
-	classpath = sourceSets.main.runtimeClasspath
-	main = javaMainClass
-	args cmdargs
-}
-/*
-* End Block for CLI
-*/
-
 
 
 
