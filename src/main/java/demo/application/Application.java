@@ -35,6 +35,6 @@ class Application implements ApplicationRunner  {
 
     public void run(ApplicationArguments args) throws Exception {
         bootStrap.init(applicationContext);
-        //cliService.parse();
+        cliService.parse();
     }
 }
