@@ -1,6 +1,9 @@
 ![alt text](https://github.com/orubel/logos/blob/master/beapi_logo_large.png)
 # spring-boot-starter-beapi Java Demo
 
+|  NOTE :point_up:    | This is JUST A DEMO application! Edit as needed!|
+|---------------|:------------------------|
+
 **Springboot Version** - 2.6.2 (or greater)
 
 **JVM** - 17 (can work on 1.8 but have to change GC)
