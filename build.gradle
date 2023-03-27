@@ -5,7 +5,7 @@ buildscript {
 		mavenLocal()
 		mavenCentral()
 		maven {
-			url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+			url 'https://s01.oss.sonatype.org/content/repositories/releases'
 		}
 	}
 }
@@ -43,7 +43,7 @@ apply plugin: "io.spring.dependency-management"
 dependencies {
 	// [LOCAL]
 	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
-	//implementation 'io.beapi:spring-boot-starter-beapi:0.6.0-STABLE'
+
 
 	// [CORE LIBS RATHER THAN STARTERS TO REDUCE JAR SIZE]
 	implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
@@ -120,6 +120,7 @@ jar {
 }
 
 
+
 /*
 * Start Block for CLI
 */
@@ -145,7 +146,6 @@ task scaffold(type: JavaExec) {
 /*
 * End Block for CLI
 */
-
 
 
 
