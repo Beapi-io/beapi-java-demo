@@ -64,16 +64,13 @@ class ChainingFunctionalTest extends Specification {
 
     @Shared String adminUserToken
 
-
-
-    /*
-    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
-    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
-     */
-    @Shared String protocol = "http://"
+    
 
     @Value("\${server.address}")
     String serverAddress;
+
+    @Value("\${api.protocol}")
+    String protocol
 
     @LocalServerPort private int port
 
@@ -92,7 +89,7 @@ class ChainingFunctionalTest extends Specification {
 
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
             String loginUri = "/authenticate"
-            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -139,7 +136,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -183,7 +180,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -234,7 +231,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -278,7 +275,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -328,7 +325,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
 
             HttpClient client = new DefaultHttpClient();
@@ -373,7 +370,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -421,7 +418,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
 
             HttpClient client = new DefaultHttpClient();
@@ -472,7 +469,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
 
             HttpClient client = new DefaultHttpClient();
@@ -521,7 +518,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);

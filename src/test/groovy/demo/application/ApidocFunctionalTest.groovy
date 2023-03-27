@@ -60,6 +60,9 @@ class ApidocFunctionalTest extends Specification {
     @Value("\${server.address}")
     String serverAddress;
 
+    @Value("\${api.protocol}")
+    String protocol
+
     @LocalServerPort private int port
 
     @Shared String exchangeIntro
@@ -76,7 +79,7 @@ class ApidocFunctionalTest extends Specification {
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
-            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -111,7 +114,7 @@ class ApidocFunctionalTest extends Specification {
                 returnsList.add(it.name)
             }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
@@ -140,7 +143,7 @@ class ApidocFunctionalTest extends Specification {
         setup:"logging in"
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
             String loginUri = "/authenticate"
-            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -175,7 +178,7 @@ class ApidocFunctionalTest extends Specification {
                 returnsList.add(it.name)
             }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)

@@ -49,14 +49,11 @@ class BadApiFunctionalTest extends Specification {
 
     @Shared String controller = 'user'
 
-    /*
-    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
-    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
-     */
-    @Shared String protocol = "http://"
-
     @Value("\${server.address}")
     String serverAddress;
+
+    @Value("\${api.protocol}")
+    String protocol
 
     @LocalServerPort private int port
 
@@ -75,7 +72,7 @@ class BadApiFunctionalTest extends Specification {
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
-            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -117,7 +114,7 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -162,7 +159,7 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -196,7 +193,7 @@ class BadApiFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
@@ -240,7 +237,7 @@ class BadApiFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
