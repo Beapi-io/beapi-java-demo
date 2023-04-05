@@ -53,12 +53,11 @@ public class BootStrap {
 
     LinkedHashMap testLoadOrder = new LinkedHashMap();
 
-
     public void init(ApplicationContext applicationContext) {
         // START BOOTSTRAP AUTHORITIES
         ArrayList<String> roles = new ArrayList();
         roles.add(apiProperties.getSecurity().getSuperuserRole());
-        roles.add(apiProperties.getSecurity().getUserRole());
+        roles.add(apiProperties.getSecurity().getTestRole());
 
         List<Authority> auth = authService.findAll();
 

@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApidocFunctionalTest extends Specification {
 
+
     @Autowired
     ApplicationContext applicationContext
 
@@ -51,11 +52,6 @@ class ApidocFunctionalTest extends Specification {
 
     @Shared String controller = 'apidoc'
 
-    /*
-    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
-    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
-     */
-    @Shared String protocol = "http://"
 
     @Value("\${server.address}")
     String serverAddress;
@@ -102,9 +98,11 @@ class ApidocFunctionalTest extends Specification {
 
     void "[testuser] GET USER apidocs"() {
         setup:"apidocs called"
+            println("### apidocs called")
             String action = 'show'
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            println(cache)
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
@@ -199,6 +197,7 @@ class ApidocFunctionalTest extends Specification {
             assert statusCode == 200
             assert infoList.size() == infoList.intersect(['authority', 'connector', 'company', 'dept', 'branch', 'user', 'apidoc']).size()
     }
+
 
 
     private String getVersion() throws IOException {

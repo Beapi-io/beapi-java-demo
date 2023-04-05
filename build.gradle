@@ -133,9 +133,9 @@ if (project.hasProperty("args")) {
 // --Pargs="domain=full.class.name"
 // --Pargs="controller=package.name, domain=full.class.name"
 task scaffold(type: JavaExec) {
-	test {
-		exclude '**/*'
-	}
+	//test {
+	//	exclude '**/*'
+	//}
 	group = "Execution"
 	description = "Run the main class with JavaExecTask"
 	classpath = sourceSets.main.runtimeClasspath
