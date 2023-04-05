@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.ApplicationContext;
 import org.slf4j.LoggerFactory;
 import java.util.*;
-//import io.beapi.api.service.CliService;
+import io.beapi.api.service.CliService;
 
 
 @ComponentScan({"io.beapi.api.*","demo.application.*"})
@@ -21,8 +21,8 @@ class Application implements ApplicationRunner  {
     @Autowired
     BootStrap bootStrap;
 
-    //@Autowired
-    //private CliService cliService;
+    @Autowired
+    private CliService cliService;
 
     @Autowired
     ApplicationContext applicationContext;
