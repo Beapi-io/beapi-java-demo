@@ -28,7 +28,7 @@ api:
     security:
         superuserRole: 'ROLE_ADMIN'
         userRole: 'ROLE_USER'
-        testRole: 'ROLE_TEST'
+        testRole: 'ROLE_USER'
         networkGroups: ['open','public','private']
         networkRoles: {'open':['ROLE_ADMIN','ROLE_ANONYMOUS','ROLE_USER','ROLE_TEST],'public':['ROLE_ADMIN','ROLE_USER','ROLE_TEST'],'private':['ROLE_ADMIN']}
         corsNetworkGroups: { 

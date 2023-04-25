@@ -41,11 +41,12 @@ public class UserController extends BeapiRequestHandler{
 	}
 
 	public User show(HttpServletRequest request, HttpServletResponse response){
+			System.out.println("### User/show ###");
 			String username;
 			if(principle.isSuperuser()){
-				username = (Objects.nonNull(this.params.get("id")))?(this.params.get("id")):principle.name().toString();
+				username = (Objects.nonNull(this.params.get("id")))? (this.params.get("id")):principle.name();
+				System.out.println(username);
 			}else {
-
 				username = principle.name();
 				//System.out.println(username);
 			}
@@ -81,55 +82,46 @@ public class UserController extends BeapiRequestHandler{
 	}
 
 
-	/*
-	LinkedHashMap update(){
-		try{
-			User user
-			if(isSuperuser() && params?.id){
-				user = User.get(params?.id?.toLong())
-			}else{
-				user = User.get(springSecurityService.principal.id)
-			}
-			if(user){
-				user.username = params.username
-				user.password = params.password
-				user.email = params.email
 
-				if(isSuperuser()){
-					user.enabled = params.enabled
-				}
+	public User updatePassword(HttpServletRequest request, HttpServletResponse response){
 
-				if(!user.save(flush:true,failOnError:true)){
-					user.errors.allErrors.each { println(it) }
-				}
-				return [person:user]
-			}else{
-				render(status: 500,text:"Id does not match record in database.")
+			String username;
+			if(principle.isSuperuser()){
+				username = (Objects.nonNull(this.params.get("id")))? (this.params.get("id")):principle.name();
+			}else {
+				username = principle.name();
 			}
-		}catch(Exception e){
-			throw new Exception("[PersonController : update] : Exception - full stack trace follows:",e)
-		}
+			User user = userService.findByUsername(username);
+
+			if (Objects.nonNull(user)) {
+				user.setPassword(passwordEncoder.encode(this.params.get("password")));
+				userService.save(user);
+			}else{
+				writeErrorResponse(response, "404", request.getRequestURI());
+			}
+
+			return user;
 	}
-	 */
+
+
+
+	public User getByUsername(HttpServletRequest request, HttpServletResponse response){
+		String username;
+		if(principle.isSuperuser()){
+			username = (Objects.nonNull(this.params.get("id")))? (this.params.get("id")):principle.name();
+		}else {
+			username = principle.name();
+			//System.out.println(username);
+		}
+
+		User user = userService.findByUsername(username);
+		if (!Objects.nonNull(user)) {
+			writeErrorResponse(response, "404", request.getRequestURI());
+		}
+		return user;
+	}
 
 	/*
-	LinkedHashMap getByUsername(){
-		try{
-			User user
-			user = User.findWhere(username: "params?.username", enabled: true)
-			if(user){
-				return [person: user]
-			}else{
-				render(status: 500,text:"Id does not match record in database.")
-			}
-			return [person: user]
-		}catch(Exception e){
-			throw new Exception("[PersonController : getByUsername] : Exception - full stack trace follows:",e)
-		}
-	}
-	 */
-
-/*
 	LinkedHashMap delete() {
 		User user
 		List prole
