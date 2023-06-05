@@ -26,6 +26,14 @@ description = "Java Demo Application for spring-boot-starter-beapi"
 
 // [ APPLYING GRADLE PLUGINS ]
 apply plugin: 'application'
+apply plugin: 'groovy'
+
+sourceSets {
+	main {
+		java { srcDirs = [] }    // no source dirs for the java compiler
+		groovy { srcDirs = ["src/main/java", "src/main/groovy"] }  // compile   everything in src/ with groovy
+	}
+}
 
 sourceCompatibility = "${sourceCompatibility}"
 
@@ -66,6 +74,10 @@ dependencies {
 	implementation("org.springframework:spring-tx:5.3.14")
 	implementation("org.springframework:spring-web:5.3.14")
 
+	implementation('org.codehaus.gpars:gpars:1.2.1'){
+		exclude group:'org.multiverse', module:'multiverse-core'
+		exclude group:'org.codehaus.groovy', module: 'groovy-all'
+	}
 
 	// [LOGGING]
 	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'

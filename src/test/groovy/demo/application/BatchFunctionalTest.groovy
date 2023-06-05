@@ -67,8 +67,11 @@ class BatchFunctionalTest extends Specification {
     @Value("\${server.address}")
     String serverAddress;
 
-    @Value("\${api.protocol}")
-    String protocol
+    /*
+    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
+    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
+     */
+    @Shared String protocol = "http://"
 
     @LocalServerPort private int port
 
@@ -86,7 +89,7 @@ class BatchFunctionalTest extends Specification {
 
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
             String loginUri = "/authenticate"
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -132,7 +135,7 @@ class BatchFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);

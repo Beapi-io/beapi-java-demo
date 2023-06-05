@@ -12,11 +12,14 @@ import org.springframework.context.ApplicationContext;
 import org.slf4j.LoggerFactory;
 import java.util.*;
 import io.beapi.api.service.CliService;
-
+import org.springframework.beans.factory.annotation.Value;
 
 @ComponentScan({"io.beapi.api.*","demo.application.*"})
 @SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
 class Application implements ApplicationRunner  {
+
+    @Value("${spring.profiles.active}")
+    String profile;
 
     @Autowired
     BootStrap bootStrap;
@@ -36,5 +39,6 @@ class Application implements ApplicationRunner  {
     public void run(ApplicationArguments args) throws Exception {
         bootStrap.init(applicationContext);
         cliService.parse();
+        System.out.println("Running in : "+profile);
     }
 }

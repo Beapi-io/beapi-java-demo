@@ -34,7 +34,7 @@ class BadApiFunctionalTest extends Specification {
     ApplicationContext applicationContext
 
     @Autowired
-    private ApiProperties apiProperties
+    ApiProperties apiProperties
 
     @Autowired
     ApiCacheService apiCacheService
@@ -47,13 +47,17 @@ class BadApiFunctionalTest extends Specification {
     @Shared String testUserToken
 
 
-    @Shared String controller = 'user'
+    @Shared String controller = 'apidoc'
+
 
     @Value("\${server.address}")
     String serverAddress;
 
-    @Value("\${api.protocol}")
-    String protocol
+    /*
+    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
+    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
+     */
+    @Shared String protocol = "http://"
 
     @LocalServerPort private int port
 
@@ -61,18 +65,17 @@ class BadApiFunctionalTest extends Specification {
     @Shared String appVersion
     @Shared String apiVersion = '1'
 
-
-    HttpClient httpClient = new DefaultHttpClient();
-
-
+    org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
 
     void "[testuser] login"(){
         setup:"logging in"
-            HttpClient httpClient = new DefaultHttpClient();
+            println(" ")
+            println("[testuser] login")
+            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -82,11 +85,13 @@ class BadApiFunctionalTest extends Specification {
 
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            println("responseBody:"+responseBody)
             Object info = new JsonSlurper().parseText(responseBody)
-
+            println("info : "+info)
 
         when:"info is not null"
             this.testUserToken = info.token
+            println(info.token)
         then:"assert token is not null"
             assert info.token!=[:]
             // todo : also check that ROLE_ADMIN response vars are not in keyset
@@ -114,14 +119,14 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            //HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = client.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -159,14 +164,14 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            //HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = client.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
             println(statusCode)
@@ -193,18 +198,21 @@ class BadApiFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            //HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = client.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
+            println(statusCode)
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info
+            println(responseBody)
+
             if(responseBody) {
                 info = new JsonSlurper().parseText(responseBody)
                 println(info)
@@ -237,13 +245,13 @@ class BadApiFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            //HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = client.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
 

@@ -56,8 +56,11 @@ class ApidocFunctionalTest extends Specification {
     @Value("\${server.address}")
     String serverAddress;
 
-    @Value("\${api.protocol}")
-    String protocol
+    /*
+    * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
+    * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
+     */
+    @Shared String protocol = "http://"
 
     @LocalServerPort private int port
 
@@ -66,16 +69,16 @@ class ApidocFunctionalTest extends Specification {
     @Shared String apiVersion = '1'
 
 
-    HttpClient httpClient = new DefaultHttpClient();
+    org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
 
 
     void "[testuser] login"(){
         setup:"logging in"
-            HttpClient httpClient = new DefaultHttpClient();
+            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -112,9 +115,9 @@ class ApidocFunctionalTest extends Specification {
                 returnsList.add(it.name)
             }
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            org.apache.http.client.HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.testUserToken));
@@ -131,7 +134,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['user', 'apidoc']).size()
+            assert infoList.size() == infoList.intersect(['user', 'apidoc','hook','properties']).size()
     }
 
 
@@ -141,11 +144,11 @@ class ApidocFunctionalTest extends Specification {
         setup:"logging in"
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
             String loginUri = "/authenticate"
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${loginUri}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
-            HttpClient httpClient = new DefaultHttpClient();
+            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             HttpPost request = new HttpPost(url)
             request.setEntity(stringEntity);
             HttpResponse response = httpClient.execute(request);
@@ -176,7 +179,7 @@ class ApidocFunctionalTest extends Specification {
                 returnsList.add(it.name)
             }
 
-            String url = "${protocol}://${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
@@ -195,7 +198,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['authority', 'connector', 'company', 'dept', 'branch', 'user', 'apidoc']).size()
+            assert infoList.size() == infoList.intersect(['hook','authority','connector','company','dept','branch','user','apidoc','properties']).size()
     }
 
 

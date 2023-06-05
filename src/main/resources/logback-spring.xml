@@ -43,6 +43,18 @@
         <root level="info">
             <appender-ref ref="FILE" />
         </root>
+        <logger name="org.apache.catalina.core.*" additivity="false" level="error">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="org.springframework.security.web.*" additivity="false" level="error">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="org.springframework.boot.web.servlet.filter.*" additivity="false" level="error">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="org.apache.catalina.core.*" additivity="false" level="error">
+            <appender-ref ref="STDOUT" />
+        </logger>
         <logger name="demo.service.*" additivity="false" level="error">
             <appender-ref ref="FILE" />
         </logger>

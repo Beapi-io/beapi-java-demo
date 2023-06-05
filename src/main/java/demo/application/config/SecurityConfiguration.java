@@ -4,6 +4,8 @@ package demo.application.config;
 import demo.application.filter.JwtRequestFilter;
 import demo.application.service.JwtUserDetailsService;
 import io.beapi.api.filter.RequestInitializationFilter;
+//import io.beapi.api.filter.FilterChainExceptionHandler;
+//import io.beapi.api.filter.CorsSecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +26,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.Arrays;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Order(1000)
 @Configuration
@@ -36,7 +43,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private RequestInitializationFilter requestInitializationFilter;
+
+    @Autowired
+    private FilterRegistrationBean requestInitializationFilterRegistration;
+
+    //@Autowired
+    //private FilterChainExceptionHandler filterChainExceptionHandler;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -45,20 +58,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.passwordEncoder = passwordEncoder;
     }
 
-
 /*
     @Bean
+    public CsrfTokenRepository tokenRepository() {
+        return new CookieCsrfTokenRepository();
+    }
+ */
+
+
+    @Bean
+    public JwtRequestFilter jwtRequestFilter() {
+        return new JwtRequestFilter();
+    }
+
+
+
+    @Bean
     @ConditionalOnMissingBean
-    public FilterRegistrationBean<JwtRequestFilter> jwtRequestFilter() {
+    public FilterRegistrationBean<JwtRequestFilter> jwtFilterRegistration() {
         FilterRegistrationBean<JwtRequestFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new JwtRequestFilter());
+        registrationBean.setFilter(jwtRequestFilter());
         registrationBean.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER+1);
         //registrationBean.setOrder(FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER-100)
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 
- */
 
     @Override
     @Bean
@@ -67,28 +92,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable().cors().configurationSource(corsConfigurationSource());
+        httpSecurity.csrf().disable().cors();
         httpSecurity.authorizeRequests().antMatchers("/authenticate", "/register").permitAll().anyRequest().authenticated();
         httpSecurity.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+        //httpSecurity.exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/error"));
+        httpSecurity.addFilterAfter(jwtRequestFilter(), ExceptionTranslationFilter.class);
+        //httpSecurity.addFilterBefore(jwtRequestFilter(), CorsFilter.class);
+        httpSecurity.addFilterAfter(requestInitializationFilter, JwtRequestFilter.class);
+        //httpSecurity.addFilterAfter(requestInitializationFilter, CorsFilter.class);
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost","http://localhost:80","http://localhost:8080", "http://127.0.0.1:80", "http://test.nosegrind.net"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.addExposedHeader("Access-Control-Allow-Headers");
-        config.setAllowCredentials(true);
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setExposedHeaders(Arrays.asList("Authorization"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
 
 }

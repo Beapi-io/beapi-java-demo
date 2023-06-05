@@ -6,13 +6,13 @@ api:
     views: ['admin','apidoc','api','login','logout']
     reserveduris: ['/authenticate','/register','/error','/login','/logout']
     publicEndpoint: ['jwtAuthentication','beapiError']
-    apiServer: 'http://localhost:8080'
+    apiServer: 'http://test.nosegrind.net:8080'
     apichainLimit: 3
     postcrement: false
     chainingEnabled: true
     batchingEnabled: true
     encoding: UTF-8
-    iostateDir: '.beapi/.iostate'
+    iostateDir: '.boot/.iostate'
     serverType: master
     autoTest: false
     parseValidRequestParams: false
