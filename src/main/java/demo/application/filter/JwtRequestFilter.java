@@ -94,7 +94,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 						// Spring Security Configurations successfully.
 					}
 				} else {
-					System.out.println("no username/authentication for " + request.getRequestURI());
+					// no username/authentication for " + request.getRequestURI());
+
+					String statusCode = "401";
+					response.setContentType("application/json");
+					response.setStatus(Integer.valueOf(statusCode));
+					LinkedHashMap code = ErrorCodes.codes.get(statusCode);
+					String message = "{\"timestamp\":\""+System.currentTimeMillis()+"\",\"status\":\""+statusCode+"\",\"error\":\""+code.get("short")+"\",\"message\": \""+code.get("long")+"\",\"path\":\""+request.getRequestURI()+"\"}";
+					response.getWriter().write(message);
 				}
 			}
 

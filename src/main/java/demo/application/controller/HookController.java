@@ -1,6 +1,5 @@
 package demo.application.controller;
 
-import org.springframework.stereotype.Controller;
 import demo.application.domain.Hook;
 import demo.application.domain.User;
 import demo.application.service.HookService;
@@ -31,33 +30,29 @@ public class HookController extends BeapiRequestHandler{
 	private UserService userService;
 
 
-	//reset
-
 	public List<Hook> list(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("list called...");
 		User user = userService.findByUsername(principle.name());
+		List<Hook> hooks = new ArrayList();
 		if (Objects.nonNull(user)) {
-			List<Hook> hooks = hookService.findByUser(user);
-			return hooks;
-		}else{
-			return null;
+			hooks = hookService.findByUser(user);
 		}
+		return hooks;
 	}
 
 	public Hook show(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("show called...");
+		//int id = Integer.parseInt(this.params.get("id"));
 		Long id = Long.valueOf(this.params.get("id"));
-		Hook hook = hookService.findById(id);
+		Optional<Hook> hook = hookService.findById(id);
 		if (Objects.nonNull(hook)) {
-			return hook;
+			return hook.get();
 		} else {
-			return null;
+			return new Hook();
 		}
 	}
 
 	public Hook create(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("create called...");
 		User user = userService.findByUsername(principle.name());
+
 		Hook hook = hookService.findByServiceAndUser(this.params.get("service"),user);
 
 		if (Objects.nonNull(hook)) {
@@ -66,25 +61,25 @@ public class HookController extends BeapiRequestHandler{
 			//if(!hookService.validateUrl(params.url.toString())){
 			//	render(status: 400,text:"BAD PROTOCOL: URL MUST BE FULLY QUALIFIED DOMAIN NAME (OR IP ADDRESS) FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
 			//}
-
-			hook = new Hook();
-			hook.setUser(user);
-			hook.setService(this.params.get("service"));
-			hook.setDateCreated(Instant.now().getEpochSecond());
-			hook.setCallback(this.params.get("callback"));
-			hook.setAuthorization(this.params.get("authorization"));
-
-			if (Objects.nonNull(hookService.save(hook))) {
+			try{
+				hook = new Hook();
+				hook.setUser(user);
+				hook.setService(this.params.get("service"));
+				Long now = Instant.now().getEpochSecond();
+				hook.setDateCreated(now);
+				hook.setLastModified(now);
+				hook.setCallback(this.params.get("callback"));
+				hook.setAuthorization(this.params.get("authorization"));
+				hookService.save(hook);
 				return hook;
-			} else {
-				writeErrorResponse(response, "400", request.getRequestURI(), "INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.");
+			}catch(Exception e){
+				writeErrorResponse(response, "400", request.getRequestURI(), "INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR THIS ENDPOINT AND PLEASE TRY AGAIN.");
 			}
 		}
-		return null;
+		return new Hook();
 	}
 
 	public Hook update(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("update called...");
 		User user = userService.findByUsername(principle.name());
 		Hook hook = hookService.findByServiceAndUser(this.params.get("service"),user);
 
@@ -105,15 +100,16 @@ public class HookController extends BeapiRequestHandler{
 				writeErrorResponse(response, "400", request.getRequestURI(), "INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.");
 			}
 		}else {
-			writeErrorResponse(response, "400", request.getRequestURI(),"URL DOES NOT EXIST: PLEASE CHECK YOUR REGISTERED WEBHOOKS.");
+			writeErrorResponse(response, "400", request.getRequestURI(),"HOOK DOES NOT EXIST: PLEASE CHECK YOUR REGISTERED WEBHOOKS.");
 		}
-		return null;
+		return new Hook();
 	}
 
 	public LinkedHashMap delete(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("delete called...");
+
+		//int id = Integer.parseInt(this.params.get("id"));
 		Long id = Long.valueOf(this.params.get("id"));
-		Hook hook = hookService.findById(id);
+		Optional<Hook> hook = hookService.findById(id);
 		if (Objects.nonNull(hook)) {
 			hookService.deleteById(id);
 			LinkedHashMap<String,Long> result = new LinkedHashMap<String, Long>();
@@ -122,7 +118,8 @@ public class HookController extends BeapiRequestHandler{
 		} else {
 			writeErrorResponse(response, "400", request.getRequestURI(),"HOOK DOES NOT EXIST: PLEASE CHECK YOUR REGISTERED WEBHOOKS.");
 		}
-		return null;
+
+		return new LinkedHashMap();
 	}
 
 	/*
@@ -142,11 +139,11 @@ public class HookController extends BeapiRequestHandler{
 	}
 	 */
 
-
-
 	public List getFormats(HttpServletRequest request, HttpServletResponse response){
 		return apiProperties.getSupportedFormats();
 	}
+
+
 
 
 	/**

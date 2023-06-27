@@ -41,14 +41,11 @@ public class UserController extends BeapiRequestHandler{
 	}
 
 	public User show(HttpServletRequest request, HttpServletResponse response){
-			System.out.println("### User/show ###");
 			String username;
 			if(principle.isSuperuser()){
 				username = (Objects.nonNull(this.params.get("id")))? (this.params.get("id")):principle.name();
-				System.out.println(username);
 			}else {
 				username = principle.name();
-				//System.out.println(username);
 			}
 
 			User user = userService.findByUsername(username);
@@ -111,7 +108,6 @@ public class UserController extends BeapiRequestHandler{
 			username = (Objects.nonNull(this.params.get("id")))? (this.params.get("id")):principle.name();
 		}else {
 			username = principle.name();
-			//System.out.println(username);
 		}
 
 		User user = userService.findByUsername(username);

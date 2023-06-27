@@ -6,6 +6,7 @@ import geb.spock.*
 import groovy.json.JsonSlurper
 import io.beapi.api.service.ApiCacheService
 import io.beapi.api.service.PrincipleService
+import demo.application.service.WebhookService
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -53,6 +54,9 @@ class HookFunctionalTest extends Specification {
     ApiCacheService apiCacheService
 
     @Autowired
+    WebhookService hookService
+
+    @Autowired
     PrincipleService principle
 
     @Shared String adminUserToken
@@ -83,6 +87,16 @@ class HookFunctionalTest extends Specification {
     HttpClient httpClient = new DefaultHttpClient();
 
 
+    void "test HMAC for hooks"(){
+        setup:"setup"
+            String key = "testamundo"
+            String data = '{"username":"test","email":"test@test.com"}'
+        when:"info is not null"
+            String hash = hookService.encode(key, data)
+        then:"assert token is not null"
+            assert hookService.isSignatureValid(hash, key, data)
+    }
+
 
     void "[superuser] login "(){
         setup:"logging in"
@@ -108,16 +122,16 @@ class HookFunctionalTest extends Specification {
         assert info.token!=[:]
     }
 
-    void "[superuser] GET hook/getServices (success)"() {
+    void "[superuser] GET properties/webhookProps (success)"() {
         setup:"api is called"
-        println(" ")
-        println("[superuser] GET properties/webhookProps (success)")
+
         String METHOD = "GET"
         String action = 'webhookProps'
 
         LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
         LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 

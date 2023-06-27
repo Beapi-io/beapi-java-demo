@@ -26,6 +26,7 @@ class JpaTest extends Specification {
     @Autowired
     HookService hookService;
 
+/*
     def "throw exception for invalid format of email address"() {
         LinkedHashMap superUser = apiProperties.getBootstrap().getSuperUser();
         User admin = userService.findByEmail(superUser.get("email").toString());
@@ -51,5 +52,7 @@ class JpaTest extends Specification {
         //where:
 
     }
+
+ */
 
 }

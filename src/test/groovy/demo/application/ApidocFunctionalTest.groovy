@@ -134,7 +134,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['user', 'apidoc','hook','properties']).size()
+            assert infoList.size() == infoList.intersect(['company','user', 'apidoc','hook','properties']).size()
     }
 
 

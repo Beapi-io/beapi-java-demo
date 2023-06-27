@@ -27,7 +27,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.stream.StreamSupport;
 import javax.crypto.spec.GCMParameterSpec;
-
+import io.beapi.api.service.ApiCacheService;
 
 @Component
 public class BootStrap {
@@ -40,6 +40,9 @@ public class BootStrap {
 
     @Autowired
     ApiProperties apiProperties;
+
+    @Autowired
+    ApiCacheService apiCacheService;
 
 
     @Autowired

@@ -90,8 +90,8 @@ public class User implements Serializable {
 	private List<Authority> roles;
 	//private UserAuthority[] roles
 
-	@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
-	private Set<Hook> hooks;
+	//@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
+	//private Set<Hook> hooks;
 
 	public Long getId(){
 		return id;
@@ -194,9 +194,9 @@ public class User implements Serializable {
 
 	public void setThrottleLock(boolean throttleLock) { this.throttleLock = throttleLock; }
 
-	public Set<Hook> getHooks() {
-		return this.hooks;
-	}
+	//public Set<Hook> getHooks() {
+		//return this.hooks;
+	//}
 
 
 

@@ -73,6 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 
+    // this registers filter with RequestMappingHandlerMapping
     @Bean
     @ConditionalOnMissingBean
     public FilterRegistrationBean<JwtRequestFilter> jwtFilterRegistration() {
@@ -80,9 +81,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         registrationBean.setFilter(jwtRequestFilter());
         registrationBean.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER+1);
         //registrationBean.setOrder(FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER-100)
-        registrationBean.addUrlPatterns("/*");
+        registrationBean.addUrlPatterns("/authenticate","/register","/error");
         return registrationBean;
     }
+
+
 
 
     @Override
@@ -100,9 +103,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
         //httpSecurity.exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/error"));
         httpSecurity.addFilterAfter(jwtRequestFilter(), ExceptionTranslationFilter.class);
-        //httpSecurity.addFilterBefore(jwtRequestFilter(), CorsFilter.class);
         httpSecurity.addFilterAfter(requestInitializationFilter, JwtRequestFilter.class);
-        //httpSecurity.addFilterAfter(requestInitializationFilter, CorsFilter.class);
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

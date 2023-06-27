@@ -28,18 +28,22 @@ public class Hook implements Serializable {
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
+	// uri/service subscribed to
 	@Column(nullable = false, name = "service")
 	private String service;
 
 	@Column(nullable = false, name = "format")
 	private String format = "JSON";
 
+	// uri to be called when webhook is triggered
 	@Column(nullable = false, name = "callback")
 	private String callback;
 
+	// bearer token (not optional)
 	@Column(nullable = false, name = "authorization")
 	private String authorization;
 
+	// attempts until disabled
 	@Column(nullable = false, name = "attempts")
 	private int attempts = 0;
 
