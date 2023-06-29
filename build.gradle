@@ -51,8 +51,7 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 	// [LOCAL]
-	//implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
-	implementation 'io.beapi:spring-boot-starter-beapi:0.6.5'
+	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
 
 
 	// [CORE LIBS RATHER THAN STARTERS TO REDUCE JAR SIZE]
