@@ -62,7 +62,7 @@ CREATE TABLE `authority` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `authority` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=800651 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=800970 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `branch` (
   `company_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `company_id` (`company_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2066 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=2113 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `company` (
   `version` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2222 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=2272 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +111,7 @@ CREATE TABLE `dept` (
   `branch_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `branch_id` (`branch_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2067 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=2114 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `hook` (
   `format` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKaihuikmldahp68gmealxg88n5` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=354 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=368 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,4 +236,4 @@ CREATE TABLE `user_ip` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-26  6:41:18
+-- Dump completed on 2023-06-27 10:23:22
