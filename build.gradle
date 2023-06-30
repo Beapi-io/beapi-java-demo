@@ -43,6 +43,7 @@ repositories {
 	mavenCentral()
 	maven {
 		url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+		//url 'https://s01.oss.sonatype.org/content/repositories/releases'
 	}
 }
 
@@ -51,7 +52,7 @@ apply plugin: "io.spring.dependency-management"
 dependencies {
 	// [LOCAL]
 	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
-	//implementation 'io.beapi:spring-boot-starter-beapi:0.6.5'
+
 
 	// [CORE LIBS RATHER THAN STARTERS TO REDUCE JAR SIZE]
 	implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
@@ -78,6 +79,11 @@ dependencies {
 		exclude group:'org.multiverse', module:'multiverse-core'
 		exclude group:'org.codehaus.groovy', module: 'groovy-all'
 	}
+
+
+	// {SECURITY}
+	implementation 'com.google.guava:guava:26.0-jre'
+
 
 	// [LOGGING]
 	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'
@@ -135,6 +141,32 @@ jar {
 }
 
 
+
+/*
+* Start Block for CLI
+*/
+if (project.hasProperty("args")) {
+	ext.cmdargs = project.getProperty("args")
+} else {
+	ext.cmdargs = ""
+}
+
+
+// --Pargs="domain=full.class.name"
+// --Pargs="controller=package.name, domain=full.class.name"
+task scaffold(type: JavaExec) {
+	//test {
+	//	exclude '**/*'
+	//}
+	group = "Execution"
+	description = "Run the main class with JavaExecTask"
+	classpath = sourceSets.main.runtimeClasspath
+	main = javaMainClass
+	args cmdargs
+}
+/*
+* End Block for CLI
+*/
 
 
 
