@@ -54,14 +54,14 @@ class AuthorityFunctionalTest extends Specification {
 
     @Shared String controller = 'authority'
 
+    @Value("\${server.address}")
+    String serverAddress;
+
     /*
     * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
     * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
      */
     @Shared String protocol = "http://"
-
-    @Value("\${server.address}")
-    String serverAddress;
 
     @LocalServerPort private int port
 
@@ -72,6 +72,8 @@ class AuthorityFunctionalTest extends Specification {
 
     Long authorityId
 
+    HttpClient httpClient = new DefaultHttpClient();
+
     void "[superuser] login "(){
         setup:"logging in"
             LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
@@ -80,10 +82,10 @@ class AuthorityFunctionalTest extends Specification {
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
-            HttpClient httpClient = new DefaultHttpClient();
+            //HttpClient httpClient = new DefaultHttpClient();
             HttpPost request = new HttpPost(url)
             request.setEntity(stringEntity);
-            HttpResponse response = httpClient.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
@@ -114,11 +116,11 @@ class AuthorityFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            //HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = client.execute(request);
+            HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -158,11 +160,11 @@ class AuthorityFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-        HttpClient client = new DefaultHttpClient();
+        //HttpClient client = new DefaultHttpClient();
         HttpPost request = new HttpPost(url)
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
         request.setEntity(stringEntity);
-        HttpResponse response = client.execute(request);
+        HttpResponse response = this.httpClient.execute(request);
 
         int statusCode = response.getStatusLine().getStatusCode()
 

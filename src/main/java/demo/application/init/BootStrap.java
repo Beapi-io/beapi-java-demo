@@ -27,7 +27,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.stream.StreamSupport;
 import javax.crypto.spec.GCMParameterSpec;
-
+import io.beapi.api.service.ApiCacheService;
 
 @Component
 public class BootStrap {
@@ -41,6 +41,9 @@ public class BootStrap {
     @Autowired
     ApiProperties apiProperties;
 
+    @Autowired
+    ApiCacheService apiCacheService;
+
 
     @Autowired
     private AuthorityService authService;
@@ -53,12 +56,11 @@ public class BootStrap {
 
     LinkedHashMap testLoadOrder = new LinkedHashMap();
 
-
     public void init(ApplicationContext applicationContext) {
         // START BOOTSTRAP AUTHORITIES
         ArrayList<String> roles = new ArrayList();
         roles.add(apiProperties.getSecurity().getSuperuserRole());
-        roles.add(apiProperties.getSecurity().getUserRole());
+        roles.add(apiProperties.getSecurity().getTestRole());
 
         List<Authority> auth = authService.findAll();
 

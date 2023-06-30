@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import demo.application.service.JwtTokenUtil;
+import org.springframework.stereotype.Controller;
 
 @RestController
 @CrossOrigin

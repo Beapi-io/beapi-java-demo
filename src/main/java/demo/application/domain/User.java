@@ -57,25 +57,31 @@ public class User implements Serializable {
 	@Column(nullable = true, name = "avatar_url")
 	String avatarUrl;
 
-	@Column(nullable = true, name = "enabled")
+	@Column(nullable = false, name = "enabled")
 	Boolean enabled=true;
 
-	@Column(nullable = true, name = "account_expired")
-	Boolean accountExpired=false;
-
-	@Column(nullable = true, name = "account_locked")
-	Boolean accountLocked=false;
-
-	@Column(nullable = true, name = "password_expired")
+	@Column(nullable = false, name = "password_expired")
 	Boolean passwordExpired=false;
 
+	@Column(nullable = false, name = "account_expired")
+	Boolean accountExpired=false;
 
+	@Column(nullable = false, name = "account_locked")
+	Boolean accountLocked=false;
+
+	@Column(nullable = false, name = "throttle_lock")
+	private boolean throttleLock=false;
+
+	@Column(nullable = true, name = "current_limit")
+	private Long currentLimit;
+
+	@Column(nullable = true, name = "current_content_length")
+	private Long currentContentLength;
 
 
 	//@OneToMany(targetEntity=UserAuthority.class, fetch=FetchType.EAGER, orphanRemoval = true)
 	//@JoinColumn(name = "user_id")
 	//@OrderColumn(name="authority_id")
-
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_authority",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName="id"),
@@ -83,6 +89,9 @@ public class User implements Serializable {
 	)
 	private List<Authority> roles;
 	//private UserAuthority[] roles
+
+	//@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
+	//private Set<Hook> hooks;
 
 	public Long getId(){
 		return id;
@@ -166,5 +175,29 @@ public class User implements Serializable {
 	public List<Authority> getAuthorities(){
 		return roles;
 	}
+
+	public Long getCurrentLimit() {
+		return currentLimit;
+	}
+
+	public void setCurrentLimit(Long currentLimit) { this.currentLimit = currentLimit; }
+
+	public Long getCurrentContentLength() {
+		return currentContentLength;
+	}
+
+	public void setCurrentContentLength(Long currentContentLength) { this.currentContentLength = currentContentLength; }
+
+	public boolean getThrottleLock() {
+		return throttleLock;
+	}
+
+	public void setThrottleLock(boolean throttleLock) { this.throttleLock = throttleLock; }
+
+	//public Set<Hook> getHooks() {
+		//return this.hooks;
+	//}
+
+
 
 }

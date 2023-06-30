@@ -64,16 +64,16 @@ class ChainingFunctionalTest extends Specification {
 
     @Shared String adminUserToken
 
+    
 
+    @Value("\${server.address}")
+    String serverAddress;
 
     /*
     * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
     * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
      */
     @Shared String protocol = "http://"
-
-    @Value("\${server.address}")
-    String serverAddress;
 
     @LocalServerPort private int port
 

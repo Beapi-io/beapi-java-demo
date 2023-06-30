@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApidocFunctionalTest extends Specification {
 
+
     @Autowired
     ApplicationContext applicationContext
 
@@ -51,14 +52,15 @@ class ApidocFunctionalTest extends Specification {
 
     @Shared String controller = 'apidoc'
 
+
+    @Value("\${server.address}")
+    String serverAddress;
+
     /*
     * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
     * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
      */
     @Shared String protocol = "http://"
-
-    @Value("\${server.address}")
-    String serverAddress;
 
     @LocalServerPort private int port
 
@@ -67,12 +69,12 @@ class ApidocFunctionalTest extends Specification {
     @Shared String apiVersion = '1'
 
 
-    HttpClient httpClient = new DefaultHttpClient();
+    org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
 
 
     void "[testuser] login"(){
         setup:"logging in"
-            HttpClient httpClient = new DefaultHttpClient();
+            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
@@ -99,9 +101,11 @@ class ApidocFunctionalTest extends Specification {
 
     void "[testuser] GET USER apidocs"() {
         setup:"apidocs called"
+            println("### apidocs called")
             String action = 'show'
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
+            println(cache)
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
@@ -113,7 +117,7 @@ class ApidocFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            HttpClient client = new DefaultHttpClient();
+            org.apache.http.client.HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.testUserToken));
@@ -130,7 +134,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['user', 'apidoc']).size()
+            assert infoList.size() == infoList.intersect(['company','user', 'apidoc','hook','properties']).size()
     }
 
 
@@ -144,7 +148,7 @@ class ApidocFunctionalTest extends Specification {
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
-            HttpClient httpClient = new DefaultHttpClient();
+            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             HttpPost request = new HttpPost(url)
             request.setEntity(stringEntity);
             HttpResponse response = httpClient.execute(request);
@@ -194,8 +198,9 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['authority', 'connector', 'company', 'dept', 'branch', 'user', 'apidoc']).size()
+            assert infoList.size() == infoList.intersect(['hook','authority','connector','company','dept','branch','user','apidoc','properties']).size()
     }
+
 
 
     private String getVersion() throws IOException {
