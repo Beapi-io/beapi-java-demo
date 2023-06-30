@@ -26,6 +26,15 @@ description = "Java Demo Application for spring-boot-starter-beapi"
 
 // [ APPLYING GRADLE PLUGINS ]
 apply plugin: 'application'
+apply plugin: 'groovy'
+
+sourceSets {
+	main {
+		java { srcDirs = [] }    // no source dirs for the java compiler
+		groovy { srcDirs = ["src/main/java", "src/main/groovy"] }  // compile   everything in src/ with groovy
+	}
+}
+
 
 sourceCompatibility = "${sourceCompatibility}"
 
@@ -41,8 +50,8 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 	// [LOCAL]
-	//implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
-	implementation 'io.beapi:spring-boot-starter-beapi:0.6.5'
+	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
+	//implementation 'io.beapi:spring-boot-starter-beapi:0.6.5'
 
 	// [CORE LIBS RATHER THAN STARTERS TO REDUCE JAR SIZE]
 	implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
@@ -65,6 +74,10 @@ dependencies {
 	implementation("org.springframework:spring-tx:5.3.14")
 	implementation("org.springframework:spring-web:5.3.14")
 
+	implementation('org.codehaus.gpars:gpars:1.2.1'){
+		exclude group:'org.multiverse', module:'multiverse-core'
+		exclude group:'org.codehaus.groovy', module: 'groovy-all'
+	}
 
 	// [LOGGING]
 	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'
@@ -76,6 +89,9 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation 'com.zaxxer:HikariCP:3.2.0'
 	runtimeOnly 'mysql:mysql-connector-java'
+
+	// [HASHING]
+	implementation 'com.google.guava:guava:26.0-jre'
 
 	// [TEST]
 	implementation 'commons-io:commons-io:2.8.0'
