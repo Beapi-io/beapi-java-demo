@@ -28,7 +28,7 @@ public class Hook implements Serializable {
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
-	// uri/service subscribed to
+	// endpoint (set via 'hook' in IOState)
 	@Column(nullable = false, name = "service")
 	private String service;
 

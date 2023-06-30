@@ -13,12 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.Instant;
 import java.util.*;
 import io.beapi.api.properties.ApiProperties;
+import demo.application.service.WebhookService;
 
 @Controller("hook")
 public class HookController extends BeapiRequestHandler{
 
 	@Autowired
 	ApiProperties apiProperties;
+
+	@Autowired
+	WebhookService webhookService;
 
 	@Autowired
 	PrincipleService principle;
@@ -168,4 +172,14 @@ public class HookController extends BeapiRequestHandler{
 		}
 	}
 	 */
+
+	public LinkedHashMap getHookServices(HttpServletRequest request, HttpServletResponse response){
+		//System.out.println("### Hook/getHookService called...");
+		ArrayList newList = webhookService.getHookServices();
+		LinkedHashMap<String,ArrayList> output = new LinkedHashMap();
+		output.put("hookServices",newList);
+		//System.out.println(output);
+		return output;
+	}
+
 }

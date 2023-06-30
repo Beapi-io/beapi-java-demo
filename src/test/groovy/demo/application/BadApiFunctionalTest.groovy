@@ -57,7 +57,7 @@ class BadApiFunctionalTest extends Specification {
     * PROTOCOL SHOULD ALWAYS BE HTTP INTERNALLY AS PROXY/LOAD BALANCER WILL HANDLE
     * CERTIFICATE AND FORWARD TO APP SERVER (WHICH THEN ONLY NEEDS HTTP INTERNALLY)
      */
-    @Shared String protocol = "http://"
+    @Shared String protocol
 
     @LocalServerPort private int port
 
@@ -71,6 +71,8 @@ class BadApiFunctionalTest extends Specification {
         setup:"logging in"
             println(" ")
             println("[testuser] login")
+            this.protocol = "${apiProperties.getTestingProtocol()}://"
+
             org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
