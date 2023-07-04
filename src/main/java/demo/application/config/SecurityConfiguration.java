@@ -2,7 +2,6 @@ package demo.application.config;
 
 
 import demo.application.filter.JwtRequestFilter;
-import demo.application.service.JwtUserDetailsService;
 import io.beapi.api.filter.RequestInitializationFilter;
 //import io.beapi.api.filter.FilterChainExceptionHandler;
 //import io.beapi.api.filter.CorsSecurityFilter;
@@ -32,6 +31,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Order(1000)
 @Configuration
 @EnableWebSecurity(debug=false)
@@ -40,7 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
 
     @Autowired
     private RequestInitializationFilter requestInitializationFilter;
@@ -58,19 +57,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.passwordEncoder = passwordEncoder;
     }
 
-/*
-    @Bean
-    public CsrfTokenRepository tokenRepository() {
-        return new CookieCsrfTokenRepository();
-    }
- */
-
 
     @Bean
     public JwtRequestFilter jwtRequestFilter() {
         return new JwtRequestFilter();
     }
-
 
 
     // this registers filter with RequestMappingHandlerMapping
@@ -93,8 +84,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-
-
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
