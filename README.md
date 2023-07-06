@@ -1,7 +1,7 @@
 ![alt text](https://github.com/orubel/logos/blob/master/beapi_logo_large.png)
 # spring-boot-starter-beapi Java Demo
 
-|  NOTE :point_up:    | We are now doing hourly builds on this to test for issues. |
+|  NOTE :point_up:    | We are now doing hourly builds on this repo and the starter. |
 |---------------|:------------------------|
 
 **Springboot Version** - 2.6.2 (or greater)
