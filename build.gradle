@@ -114,12 +114,22 @@ dependencies {
 
 ext.javaMainClass = "demo.application.Application"
 
+// -Pargs=configType=${configType}
 application {
 	mainClass = javaMainClass
-	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=300 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom"]
-	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
-	// aws micro
-	applicationDefaultJvmArgs = ["-Xms512m -Xmx1024m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
+
+	if (project.hasProperty("args")) {
+		List temp = project.args.split(',')
+		temp.each(){
+			List l = args.split('=')
+			if(l[0]=='configType' && project.property('configType.'+l[1])) {
+
+				applicationDefaultJvmArgs = [project.property('configType.'+l[1])]
+			}
+		}
+	}else{
+		applicationDefaultJvmArgs = [project.property('configType.'+'medium')]
+	}
 }
 
 springBoot {
