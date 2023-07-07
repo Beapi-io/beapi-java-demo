@@ -13,7 +13,7 @@
 
 **Build** - From the shell of the install directory, build for your 'configType' of nano/medium/large (see gradle.properties):
 ```
-gradle clean;gradle build -Pargs=configType=nano
+gradle clean build -Pargs=configType=nano
  ```
  
 
