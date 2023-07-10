@@ -9,7 +9,13 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.web.server.Compression;
+import org.springframework.beans.factory.annotation.Autowired;
+import io.beapi.api.properties.ApiProperties;
+import io.beapi.api.properties.ServerProperties;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
+
 import org.apache.coyote.http2.Http2Protocol;
 //import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +23,16 @@ import org.apache.coyote.http2.Http2Protocol;
 @Configuration
 public class TomcatConfig  {
 
+    @Autowired
+    ApiProperties apiProperties;
+
+    @Autowired
+    ServerProperties serverProperties;
+
+    Boolean compression;
+    Integer maxThreads;
+    Integer minSpareThreads;
+    Integer maxConnections;
 
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> servletContainerCustomizer() {
@@ -24,53 +40,60 @@ public class TomcatConfig  {
 
             @Override
             public void customize(TomcatServletWebServerFactory factory) {
-                Compression compression = new Compression();
-                compression.setEnabled(false);
-                factory.setCompression(compression);
-                factory.setUriEncoding(StandardCharsets.UTF_8);
-                factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+                String configType = apiProperties.getConfigType().toLowerCase();
+                ArrayList configTypes = new ArrayList();
+                configTypes.add("nano");
+                configTypes.add("medium");
+                configTypes.add("large");
 
-                    @Override
-                    public void customize(Connector connector) {
-                        connector.addUpgradeProtocol(new Http2Protocol());
-                        AbstractHttp11Protocol<?> httpHandler = ((AbstractHttp11Protocol<?>) connector.getProtocolHandler());
-                        httpHandler.setMaxKeepAliveRequests(-1);
-                        httpHandler.setRejectIllegalHeader(true);
-                        httpHandler.setMaxThreads(200);
-                        httpHandler.setMinSpareThreads(100);
-                        httpHandler.setMaxConnections(10000);
-                        //httpHandler.setUseKeepAliveResponseHeader(true);
-                        //httpHandler.setKeepAliveTimeout(keepAliveTimeout);
+                if(!configTypes.contains(configType)){
+                    //todo : throw better error/exception
+                    System.out.println("not a recognizable configType");
+                }else {
+                    switch(configType){
+                        case "nano":
+                            compression = serverProperties.nano.getCompression();
+                            maxThreads = serverProperties.nano.getMaxThreads();
+                            minSpareThreads = serverProperties.nano.getMinSpareThreads();
+                            maxConnections = serverProperties.nano.getMaxConnections();
+                            break;
+                        case "medium":
+                            compression = serverProperties.medium.getCompression();
+                            maxThreads = serverProperties.medium.getMaxThreads();
+                            minSpareThreads = serverProperties.medium.getMinSpareThreads();
+                            maxConnections = serverProperties.medium.getMaxConnections();
+                            break;
+                        case "large":
+                            compression = serverProperties.large.getCompression();
+                            maxThreads = serverProperties.large.getMaxThreads();
+                            minSpareThreads = serverProperties.large.getMinSpareThreads();
+                            maxConnections = serverProperties.large.getMaxConnections();
+                            break;
                     }
-                });
+
+                    Compression comp = new Compression();
+                    comp.setEnabled(compression);
+                    factory.setCompression(comp);
+                    factory.setUriEncoding(StandardCharsets.UTF_8);
+                    factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+
+                        @Override
+                        public void customize(Connector connector) {
+                            connector.addUpgradeProtocol(new Http2Protocol());
+                            AbstractHttp11Protocol<?> httpHandler = ((AbstractHttp11Protocol<?>) connector.getProtocolHandler());
+                            httpHandler.setMaxKeepAliveRequests(-1);
+                            httpHandler.setRejectIllegalHeader(true);
+                            httpHandler.setMaxThreads(maxThreads);
+                            httpHandler.setMinSpareThreads(minSpareThreads);
+                            httpHandler.setMaxConnections(maxConnections);
+                            //httpHandler.setUseKeepAliveResponseHeader(true);
+                            //httpHandler.setKeepAliveTimeout(keepAliveTimeout);
+                        }
+                    });
+                }
             }
+
         };
     }
-
-/*
-    @Override
-    public void customize(TomcatServletWebServerFactory factory) {
-        factory.addConnectorCustomizers(connector -> {
-            AbstractHttp11Protocol protocol = (AbstractHttp11Protocol) connector.getProtocolHandler();
-
-            protocol.setMaxKeepAliveRequests(50);
-
-
-            System.out.println("####################################################################################");
-            System.out.println("#");
-            System.out.println("# TomcatCustomizer");
-            System.out.println("#");
-            System.out.println("# custom maxKeepAliveRequests {"+connector.getMaxKeepAliveRequests()+"}");
-            System.out.println("# origin keepalive timeout: {"+ connector.getKeepAliveTimeout()+"} ms");
-            System.out.println("# keepalive timeout: {"+ connector.getKeepAliveTimeout()+"} ms ");
-            System.out.println("# connection timeout: {"+ connector.getConnectionTimeout()+"} ms ");
-            System.out.println("# max connections: {"+ connector.getMaxConnections()+"} ");
-            System.out.println("#");
-            System.out.println(
-                    "####################################################################################");
-
-        });
-    }
- */
 
 }

@@ -26,7 +26,6 @@ public class AuthorityService implements IAuthority {
     @Override
     public Authority save(Authority authority) {
         authrepo.saveAndFlush(authority);
-        //authrepo.flush();
         return authority;
     }
 
@@ -49,8 +48,4 @@ public class AuthorityService implements IAuthority {
         authrepo.flush();
     }
 
-    //@Override
-    //public void deleteById(int id) {
-    //    authrepo.deleteById(Long.valueOf(id));
-    //}
 }
