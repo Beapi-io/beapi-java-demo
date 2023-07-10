@@ -11,11 +11,12 @@
 **Configuration** -  Follow instructions in documentation for [installation/configuration](https://beapi-io.github.io/spring-boot-starter-beapi/index.html#section-2)
 
 
-**Build** - From the shell of the install directory, type:
+**Build** - From the shell of the install directory, build for your 'configType' of nano/medium/large (see gradle.properties):
 ```
-gradle clean;gradle build
+gradle clean build -Pargs=configType=nano
  ```
  
+
  **Run** - From the shell of the install directory, type:
  ```
  java -jar build/libs/beapi-java-demo-1.0.jar
