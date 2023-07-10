@@ -117,7 +117,7 @@ ext.javaMainClass = "demo.application.Application"
 // -Pargs=configType=${configType}
 application {
 	mainClass = javaMainClass
-	applicationDefaultJvmArgs = [project.property('configType.'+'medium')]
+	applicationDefaultJvmArgs = [project.property('configType.'+configTypeDefault)]
 	if (project.hasProperty("args")) {
 		List temp = project.args.split(',')
 		temp.each(){
