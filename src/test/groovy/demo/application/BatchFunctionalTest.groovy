@@ -1,5 +1,6 @@
 package demo.application
 
+import demo.application.domain.Authority
 import demo.application.service.AuthorityService
 import io.beapi.api.properties.ApiProperties
 import spock.lang.*
@@ -78,7 +79,7 @@ class BatchFunctionalTest extends Specification {
     @Shared String exchangeIntro
     @Shared String appVersion
     @Shared String apiVersion = '1'
-
+    @Shared ArrayList batchData = [['authority': 'ROLE_TEST1'],['authority': 'ROLE_TEST2'],['authority': 'ROLE_TEST3'],['authority': 'ROLE_TEST4'],['authority': 'ROLE_TEST5'],['authority': 'ROLE_TEST6']]
 
     HttpClient httpClient = new DefaultHttpClient();
 
@@ -116,8 +117,8 @@ class BatchFunctionalTest extends Specification {
             String action = 'create'
 
             // test with batch; test rollback later
-            ArrayList batchData = [['authority': 'ROLE_TEST1'],['authority': 'ROLE_TEST2'],['authority': 'ROLE_TEST3'],['authority': 'ROLE_TEST4'],['authority': 'ROLE_TEST5'],['authority': 'ROLE_TEST6']]
-            LinkedHashMap data = ['batch':batchData]
+            //ArrayList batchData = [['authority': 'ROLE_TEST1'],['authority': 'ROLE_TEST2'],['authority': 'ROLE_TEST3'],['authority': 'ROLE_TEST4'],['authority': 'ROLE_TEST5'],['authority': 'ROLE_TEST6']]
+            LinkedHashMap data = ['batch':this.batchData]
             String json = JsonOutput.toJson(data)
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
