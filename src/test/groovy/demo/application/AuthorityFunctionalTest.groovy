@@ -176,7 +176,7 @@ class AuthorityFunctionalTest extends Specification {
 
         when:"info is not null"
             assert info!=[:]
-            this.authorityId = info.id
+            this.authorityId = info.id.toLong()
         then:"get user"
             assert statusCode == 200
             assert infoList == returnsList.intersect(infoList)
