@@ -1,7 +1,10 @@
 package demo.application
 
-import demo.application.domain.Authority
-import demo.application.service.AuthorityService
+
+
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.service.AuthorityService
+
 import io.beapi.api.properties.ApiProperties
 import spock.lang.*
 import geb.spock.*

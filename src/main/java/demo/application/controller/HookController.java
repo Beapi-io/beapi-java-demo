@@ -1,9 +1,9 @@
 package demo.application.controller;
 
 import demo.application.domain.Hook;
-import demo.application.domain.User;
 import demo.application.service.HookService;
-import demo.application.service.UserService;
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.service.UserService;
 import io.beapi.api.service.PrincipleService;
 import io.beapi.api.controller.BeapiRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;

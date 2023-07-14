@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.beapi.api.domain.User;
 
 @Entity
 @Table(name = "hook")

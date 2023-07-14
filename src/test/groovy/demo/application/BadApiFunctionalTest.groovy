@@ -187,6 +187,7 @@ class BadApiFunctionalTest extends Specification {
             assert statusCode == 405
     }
 
+
     void "[testuser] GET api call (with NO ACTION)"() {
         setup:"api is called"
             println("")
@@ -213,11 +214,11 @@ class BadApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info
-            println(responseBody)
+            println("RESPONSE : "+responseBody)
 
             if(responseBody) {
                 info = new JsonSlurper().parseText(responseBody)
-                println(info)
+                println("INFO : "+info)
             }
 
         when:"info is not null"
@@ -225,6 +226,7 @@ class BadApiFunctionalTest extends Specification {
         then:"get user"
             assert statusCode == 200
     }
+
 
     void "[testuser] GET api call (with BAD data)"() {
         setup:"api is called"

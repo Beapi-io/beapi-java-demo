@@ -17,11 +17,11 @@
 package demo.application.service;
 
 import demo.application.domain.Hook;
-import demo.application.domain.User;
 import demo.application.repositories.HookRepository;
 import org.springframework.stereotype.Service;
 import io.beapi.api.service.HookCacheService;
-import demo.application.domain.Authority;
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.User;
 import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
