@@ -35,6 +35,7 @@ sourceSets {
 	}
 }
 
+
 sourceCompatibility = "${sourceCompatibility}"
 
 repositories {
@@ -79,8 +80,10 @@ dependencies {
 		exclude group:'org.codehaus.groovy', module: 'groovy-all'
 	}
 
+
 	// {SECURITY}
 	implementation 'com.google.guava:guava:26.0-jre'
+
 
 	// [LOGGING]
 	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'
@@ -92,6 +95,9 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation 'com.zaxxer:HikariCP:3.2.0'
 	runtimeOnly 'mysql:mysql-connector-java'
+
+	// [HASHING]
+	implementation 'com.google.guava:guava:26.0-jre'
 
 	// [TEST]
 	implementation 'commons-io:commons-io:2.8.0'
@@ -108,12 +114,22 @@ dependencies {
 
 ext.javaMainClass = "demo.application.Application"
 
+// -Pargs=configType=${configType}
 application {
 	mainClass = javaMainClass
-	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=300 -XX:MaxGCMinorPauseMillis=50 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom"]
-	//applicationDefaultJvmArgs = ["-Xms1024m -Xmx2048m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
-	// aws micro
-	applicationDefaultJvmArgs = ["-Xms512m -Xmx1024m -XX:+UseParallelGC  -XX:ParallelGCThreads=4 -XX:MaxGCPauseMillis=200 -XX:MaxGCMinorPauseMillis=75 -server -noverify  -Xshare:off  -Djava.net.preferIPv4Stack=true -XX:+EliminateLocks -XX:GCTimeRatio=7 -Djava.security.egd=file:/dev/urandom -Djdk.map.althashing.threshold=512"]
+	applicationDefaultJvmArgs = [project.property('configType.'+configTypeDefault)]
+	if (project.hasProperty("args")) {
+		List temp = project.args.split(',')
+		temp.each(){
+			List l = args.split('=')
+			if(l[0]=='configType' && project.property('configType.'+l[1])) {
+
+				applicationDefaultJvmArgs = [project.property('configType.'+l[1])]
+			}
+		}
+	}else{
+		applicationDefaultJvmArgs = [project.property('configType.'+configTypeDefault)]
+	}
 }
 
 springBoot {
