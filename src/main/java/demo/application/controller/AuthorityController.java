@@ -1,10 +1,10 @@
 package demo.application.controller;
 
-import demo.application.domain.Authority;
-import demo.application.service.AuthorityService;
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.service.AuthorityService;
 import demo.application.service.JwtUserDetailsService;
-import demo.application.service.UserAuthorityService;
-import demo.application.service.UserService;
+import io.beapi.api.domain.service.UserAuthorityService;
+import io.beapi.api.domain.service.UserService;
 import io.beapi.api.controller.BeapiRequestHandler;
 import io.beapi.api.properties.ApiProperties;
 import io.beapi.api.service.PrincipleService;

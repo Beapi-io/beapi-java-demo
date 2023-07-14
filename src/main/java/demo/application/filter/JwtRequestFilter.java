@@ -1,8 +1,9 @@
 package demo.application.filter;
 
-import demo.application.domain.Authority;
-import demo.application.domain.User;
-import demo.application.service.UserService;
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.service.UserService;
+
 import demo.application.service.JwtTokenUtil;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -102,6 +103,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 					LinkedHashMap code = ErrorCodes.codes.get(statusCode);
 					String message = "{\"timestamp\":\""+System.currentTimeMillis()+"\",\"status\":\""+statusCode+"\",\"error\":\""+code.get("short")+"\",\"message\": \""+code.get("long")+"\",\"path\":\""+request.getRequestURI()+"\"}";
 					response.getWriter().write(message);
+					//response.getWriter().flush();
 				}
 			}
 
@@ -116,6 +118,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				LinkedHashMap code = ErrorCodes.codes.get(statusCode);
 				String message = "{\"timestamp\":\""+System.currentTimeMillis()+"\",\"status\":\""+statusCode+"\",\"error\":\""+code.get("short")+"\",\"message\": \""+code.get("long")+"\",\"path\":\""+request.getRequestURI()+"\"}";
 				response.getWriter().write(message);
+				//response.getWriter().flush();
 			}
 		}
 	}

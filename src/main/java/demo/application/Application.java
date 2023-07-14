@@ -1,6 +1,8 @@
 package demo.application;
 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.boot.ApplicationArguments;
 import demo.application.init.BootStrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,8 @@ import java.util.*;
 import io.beapi.api.service.CliService;
 import org.springframework.beans.factory.annotation.Value;
 
-@ComponentScan({"io.beapi.api.*","demo.application.*"})
+@ComponentScan({"${beapi.components}","${application.components}"})
+@EnableJpaRepositories(basePackages = {"${beapi.repository}","${application.repository}"})
 @SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
 class Application implements ApplicationRunner  {
 

@@ -1,13 +1,15 @@
 package demo.application.controller;
 
-import demo.application.domain.Authority;
-import demo.application.domain.UserAuthority;
-import demo.application.service.AuthorityService;
-import demo.application.service.UserAuthorityService;
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.UserAuthority;
+import io.beapi.api.domain.service.AuthorityService;
+import io.beapi.api.domain.service.UserAuthorityService;
 import io.beapi.api.service.PrincipleService;
 import io.beapi.api.controller.BeapiRequestHandler;
-import demo.application.domain.User;
-import demo.application.service.UserService;
+
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;

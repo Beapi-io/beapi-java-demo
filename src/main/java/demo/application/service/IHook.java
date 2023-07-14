@@ -4,7 +4,7 @@ package demo.application.service;
 
 
 import demo.application.domain.Hook;
-import demo.application.domain.User;
+import io.beapi.api.domain.User;
 import java.util.List;
 import java.util.Optional;
 

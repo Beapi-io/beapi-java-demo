@@ -1,8 +1,12 @@
 package demo.application.service;
 
-import demo.application.domain.User;
+import io.beapi.api.domain.Authority;
+
+import io.beapi.api.repositories.UserRepository;
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.service.UserService;
+
 import org.slf4j.LoggerFactory;
-import demo.application.domain.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import demo.application.repositories.UserRepository;
+
 import org.springframework.web.context.annotation.RequestScope;
 import java.util.*;
 
@@ -20,6 +24,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
 	UserRepository userrepo;
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JwtUserDetailsService.class);

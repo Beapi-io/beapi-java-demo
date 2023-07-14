@@ -2,7 +2,8 @@ package demo.application.controller;
 
 import demo.application.domain.JwtRequest;
 import demo.application.domain.JwtResponse;
-import demo.application.domain.User;
+import io.beapi.api.domain.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -2,10 +2,12 @@ package demo.application
 
 import geb.spock.*
 import io.beapi.api.properties.ApiProperties
-import demo.application.service.UserService;
-import demo.application.service.HookService;
-import demo.application.domain.User
+
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.service.UserService
 import demo.application.domain.Hook
+import demo.application.service.HookService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.TestPropertySource

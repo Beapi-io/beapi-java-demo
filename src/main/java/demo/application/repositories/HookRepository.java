@@ -2,7 +2,7 @@ package demo.application.repositories;
 
 
 import demo.application.domain.Hook;
-import demo.application.domain.User;
+import io.beapi.api.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

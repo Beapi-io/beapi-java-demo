@@ -16,12 +16,10 @@
  */
 package demo.application.service
 
-import demo.application.domain.Authority;
+import io.beapi.api.domain.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
-import demo.application.repositories.DeptRepository;
 import demo.application.repositories.HookRepository;
 import demo.application.domain.Hook;
-import demo.application.service.IDept;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
@@ -29,7 +27,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import static groovyx.gpars.GParsPool.withPool;
 import javax.servlet.http.HttpServletRequest;
-
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;

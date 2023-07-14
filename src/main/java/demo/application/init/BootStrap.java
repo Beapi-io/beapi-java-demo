@@ -1,12 +1,13 @@
 package demo.application.init;
 
+import io.beapi.api.domain.Authority;
+import io.beapi.api.domain.User;
+import io.beapi.api.domain.UserAuthority;
 
-import demo.application.domain.User;
-import demo.application.domain.Authority;
-import demo.application.domain.UserAuthority;
-import demo.application.service.AuthorityService;
-import demo.application.service.UserAuthorityService;
-import demo.application.service.UserService;
+import io.beapi.api.domain.service.AuthorityService;
+import io.beapi.api.domain.service.UserService;
+import io.beapi.api.domain.service.UserAuthorityService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.context.ApplicationContext;
 import org.springframework.boot.info.BuildProperties;
