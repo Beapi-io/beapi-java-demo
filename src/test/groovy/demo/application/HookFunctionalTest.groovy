@@ -6,7 +6,7 @@ import geb.spock.*
 import groovy.json.JsonSlurper
 import io.beapi.api.service.ApiCacheService
 import io.beapi.api.service.PrincipleService
-import demo.application.service.WebhookService
+import io.beapi.api.service.WebhookService
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext

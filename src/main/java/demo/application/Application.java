@@ -40,8 +40,9 @@ class Application implements ApplicationRunner  {
     }
 
     public void run(ApplicationArguments args) throws Exception {
+        System.out.println("Running in : "+profile);
         bootStrap.init(applicationContext);
         cliService.parse();
-        System.out.println("Running in : "+profile);
+
     }
 }
