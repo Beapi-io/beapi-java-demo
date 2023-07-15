@@ -5,8 +5,8 @@ import io.beapi.api.properties.ApiProperties
 
 import io.beapi.api.domain.User;
 import io.beapi.api.domain.service.UserService
-import demo.application.domain.Hook
-import demo.application.service.HookService;
+import io.beapi.api.domain.Hook;
+import io.beapi.api.domain.service.HookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest
