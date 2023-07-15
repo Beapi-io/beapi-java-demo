@@ -1,5 +1,3 @@
-import java.util.regex.Pattern
-
 buildscript {
 	repositories {
 		mavenLocal()
@@ -35,7 +33,6 @@ sourceSets {
 	}
 }
 
-
 sourceCompatibility = "${sourceCompatibility}"
 
 repositories {
@@ -50,17 +47,28 @@ repositories {
 apply plugin: "io.spring.dependency-management"
 
 dependencies {
-	// [LOCAL]
+	// [BEAPI]
 	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0-SNAPSHOT'
 
 	// [APPLICATION RUNNER]
-	implementation("org.springframework.boot:spring-boot-autoconfigure:2.6.2")
-	implementation("org.springframework.data:spring-data-jpa:2.6.0")
+	implementation 'org.springframework.boot:spring-boot-autoconfigure:2.6.2'
+	implementation 'org.springframework.data:spring-data-jpa:2.6.0'
+	implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
+	implementation("jakarta.persistence:jakarta.persistence-api:2.2.3")
+	implementation("jakarta.validation:jakarta.validation-api:2.0.2")
+	implementation("org.apache.tomcat.embed:tomcat-embed-core:9.0.56")
+	implementation("org.slf4j:slf4j-api:1.7.32")
+	implementation("org.springframework:spring-beans:5.3.14")
+	implementation("org.springframework:spring-context:5.3.14")
+
+	implementation("org.springframework:spring-web:5.3.14")
+
 
 	// [LOGGING]
 	runtimeOnly 'org.slf4j:slf4j-api:1.7.15'
 
-	// [DATABASE]
+	// [DATABASE/JPA]
+	//implementation "jakarta.persistence:jakarta.persistence-api:2.2.3"
 	implementation 'com.zaxxer:HikariCP:3.2.0'
 	runtimeOnly 'mysql:mysql-connector-java'
 
@@ -68,8 +76,8 @@ dependencies {
 	implementation 'commons-io:commons-io:2.8.0'
 	implementation 'org.codehaus.groovy:groovy'
 	implementation 'org.codehaus.groovy:groovy-json:2.5.4'
-	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
-	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
+	testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
+	testImplementation 'org.spockframework:spock-spring:2.0-M3-groovy-3.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -91,8 +99,6 @@ application {
 				applicationDefaultJvmArgs = [project.property('configType.'+l[1])]
 			}
 		}
-	}else{
-		applicationDefaultJvmArgs = [project.property('configType.'+configTypeDefault)]
 	}
 }
 
