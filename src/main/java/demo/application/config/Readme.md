@@ -1,3 +1,6 @@
+## CONFIGURATION
+Once you have created your project, you will need to edit your '**beapi_api.yaml**' file in your ~/.boot/{env}/ directory and changes the following settings:
+
 ## API
 
 - **procCores: (CHANGE)** : Change this to the number of processors your machine has; if running on AWS/Google/SpringCloud, this will be your HyperThreads/vCPU number.
