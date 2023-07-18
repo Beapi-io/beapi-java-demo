@@ -87,6 +87,7 @@ dependencies {
 
 ext.javaMainClass = "demo.application.Application"
 
+
 // -Pargs=configType=${configType}
 application {
 	mainClass = javaMainClass
