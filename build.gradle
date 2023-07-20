@@ -22,11 +22,11 @@ plugins {
 
 description = "Java Demo Application for spring-boot-starter-beapi"
 
-// NOTE: This can be strict JAVA but we use GROOVY compiler so we can compile
-// BOTH java and groovy for this demo app.
+// NOTE: DEMO app is compiling JAVA/GROOVY using Groovy compiler; this can be changed without issue. 
+// Used for convenience of not having to build separate gradle files :)
+
 apply plugin: 'application'
 apply plugin: 'groovy'
-
 
 sourceSets {
 	main {
