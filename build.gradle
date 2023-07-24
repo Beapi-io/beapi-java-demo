@@ -50,7 +50,7 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 	// [BEAPI]
-	implementation 'io.beapi:spring-boot-starter-beapi:0.7.0'
+	implementation 'io.beapi:spring-boot-starter-beapi:0.7.1'
 
 	// [APPLICATION RUNNER]
 	implementation "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
