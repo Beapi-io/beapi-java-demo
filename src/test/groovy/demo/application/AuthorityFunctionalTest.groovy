@@ -174,7 +174,6 @@ class AuthorityFunctionalTest extends Specification {
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
 
-
         ArrayList infoList = info.keySet()
 
         when:"info is not null"
@@ -184,7 +183,7 @@ class AuthorityFunctionalTest extends Specification {
             assert statusCode == 200
             assert infoList == returnsList.intersect(infoList)
         cleanup:
-            authService.deleteById(info.id.toLong())
+            authService.deleteById(info.id?.toLong())
     }
 
     private String getVersion() throws IOException {

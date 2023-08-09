@@ -89,7 +89,7 @@ class ApidocFunctionalTest extends Specification {
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-            println("info : "+info)
+            //println("info : "+info)
 
         when:"info is not null"
             this.testUserToken = info.token
@@ -101,11 +101,11 @@ class ApidocFunctionalTest extends Specification {
 
     void "[testuser] GET USER apidocs"() {
         setup:"apidocs called"
-            println("### apidocs called")
+            //println("### apidocs called")
             String action = 'show'
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-            println(cache)
+            //println(cache)
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 

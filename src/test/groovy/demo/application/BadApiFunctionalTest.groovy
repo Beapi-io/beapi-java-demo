@@ -87,13 +87,13 @@ class BadApiFunctionalTest extends Specification {
 
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            println("responseBody:"+responseBody)
+            //println("responseBody:"+responseBody)
             Object info = new JsonSlurper().parseText(responseBody)
-            println("info : "+info)
+            //println("info : "+info)
 
         when:"info is not null"
             this.testUserToken = info.token
-            println(info.token)
+            //println(info.token)
         then:"assert token is not null"
             assert info.token!=[:]
             // todo : also check that ROLE_ADMIN response vars are not in keyset
@@ -121,7 +121,7 @@ class BadApiFunctionalTest extends Specification {
 
             //String url = "curl -v -H 'Content-Type: application/json' -H  'Authorization: Bearer  ${this.adminUserToken}' --request GET ${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/user/${action}" as String
 
             //HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -134,13 +134,11 @@ class BadApiFunctionalTest extends Specification {
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
-        println(info)
-        println(statusCode)
 
         when:"info is not null"
             assert responseBody!=[:]
         then:"get user"
-            assert statusCode == 400
+            assert statusCode == 405
     }
 
     void "[testuser] GET api call (with BAD METHOD -2)"() {
@@ -176,7 +174,7 @@ class BadApiFunctionalTest extends Specification {
             HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
-            println(statusCode)
+            //println(statusCode)
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
@@ -210,15 +208,15 @@ class BadApiFunctionalTest extends Specification {
             HttpResponse response = this.httpClient.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
-            println(statusCode)
+            //println(statusCode)
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info
-            println("RESPONSE : "+responseBody)
+            //println("RESPONSE : "+responseBody)
 
             if(responseBody) {
                 info = new JsonSlurper().parseText(responseBody)
-                println("INFO : "+info)
+                //println("INFO : "+info)
             }
 
         when:"info is not null"

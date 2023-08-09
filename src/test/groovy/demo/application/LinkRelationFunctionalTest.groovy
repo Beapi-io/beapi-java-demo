@@ -1,6 +1,6 @@
 package demo.application
 
-
+import io.beapi.api.utils.ApiDescriptor
 import demo.application.service.BranchService
 import demo.application.service.CompanyService
 import demo.application.service.DeptService
@@ -120,12 +120,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
@@ -149,7 +146,8 @@ class LinkRelationFunctionalTest extends Specification {
             this.compId = info.id
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
     }
 
     // company/show
@@ -165,12 +163,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
 
@@ -192,7 +187,8 @@ class LinkRelationFunctionalTest extends Specification {
             assert info!=[:]
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
     }
 
 
@@ -218,12 +214,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
@@ -246,7 +239,8 @@ class LinkRelationFunctionalTest extends Specification {
             this.branchId = info.id
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+        // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
     }
 
     // branch/show
@@ -262,12 +256,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
 
@@ -288,7 +279,8 @@ class LinkRelationFunctionalTest extends Specification {
             assert info!=[:]
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
             assert info[1].path!=null
     }
 
@@ -305,12 +297,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
 
@@ -333,7 +322,8 @@ class LinkRelationFunctionalTest extends Specification {
 
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
             assert info[1].path!=null
     }
 
@@ -360,12 +350,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
@@ -389,7 +376,8 @@ class LinkRelationFunctionalTest extends Specification {
             this.deptId = info.id
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
     }
 
     // dept/show
@@ -405,12 +393,9 @@ class LinkRelationFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            ArrayList returnsList = []
             def apiObject = cache?."${this.apiVersion}"?."${action}"
-            apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-            apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+            Set returnsList = getResponseData(adminAuth, apiObject)
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
@@ -433,7 +418,8 @@ class LinkRelationFunctionalTest extends Specification {
             assert info!=[:]
         then:"get user"
             assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+            // note : make sure 'intersect' is in right order; this changed in Groovy 4
+            assert infoList == infoList.intersect(returnsList)
             assert info[1].path!=null
     }
 
@@ -449,12 +435,9 @@ class LinkRelationFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
         def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
-
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        Set returnsList = getResponseData(adminAuth, apiObject)
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
 
@@ -477,7 +460,8 @@ class LinkRelationFunctionalTest extends Specification {
         assert info!=[:]
         then:"get user"
         assert statusCode == 200
-        assert infoList == returnsList.intersect(infoList)
+        // note : make sure 'intersect' is in right order; this changed in Groovy 4
+        assert infoList == infoList.intersect(returnsList)
         assert info[1].path!=null
     }
 
@@ -489,11 +473,11 @@ class LinkRelationFunctionalTest extends Specification {
 
     void "Cleaning up data"() {
         setup:
-            println("")
-            println("Cleaning up data")
-            println("dept : "+this.deptId)
-            println("branch : "+this.branchId)
-            println("comp : "+this.compId)
+            //println("")
+            //println("Cleaning up data")
+            //println("dept : "+this.deptId)
+            //println("branch : "+this.branchId)
+            //println("comp : "+this.compId)
             deptService.deleteById(this.deptId);
             branchService.deleteById(this.branchId);
             compService.deleteById(this.compId);
@@ -526,5 +510,15 @@ class LinkRelationFunctionalTest extends Specification {
             version = properties.getProperty('build.version')
         }
         return version
+    }
+
+    private Set getResponseData(String auth, ApiDescriptor apiObject){
+        Set returnsList = []
+        String adminAuth = apiProperties.getSecurity().getSuperuserRole()
+
+        apiObject?.returns?."${auth}".each() { it2 -> returnsList.add(it2.name) }
+        apiObject?.returns?."permitAll".each() { it2 -> returnsList.add(it2.name) }
+
+        return returnsList
     }
 }
