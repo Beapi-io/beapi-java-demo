@@ -22,9 +22,6 @@ plugins {
 
 description = "Java Demo Application for spring-boot-starter-beapi"
 
-// NOTE: DEMO app is compiling JAVA/GROOVY using Groovy compiler; this can be changed without issue. 
-// Used for convenience of not having to build separate gradle files :)
-
 apply plugin: 'application'
 apply plugin: 'groovy'
 
@@ -50,9 +47,7 @@ apply plugin: "io.spring.dependency-management"
 
 dependencies {
 	// [BEAPI]
-
 	implementation 'io.beapi:spring-boot-starter-beapi:0.8.0-SNAPSHOT'
-
 
 	// [APPLICATION RUNNER]
 	implementation "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
@@ -75,10 +70,11 @@ dependencies {
 	// [TEST]
 	implementation 'com.zaxxer:HikariCP:3.2.0'
 	implementation 'commons-io:commons-io:2.8.0'
-	implementation 'org.codehaus.groovy:groovy'
-	implementation 'org.codehaus.groovy:groovy-json:2.5.4'
-	testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
-	testImplementation 'org.spockframework:spock-spring:2.0-M3-groovy-3.0'
+	//implementation 'org.codehaus.groovy:groovy'
+	implementation 'org.apache.groovy:groovy:4.0.8'
+	implementation 'org.apache.groovy:groovy-json:4.0.8'
+	testImplementation('org.spockframework:spock-core:2.3-groovy-4.0')
+	testImplementation('org.spockframework:spock-spring:2.3-groovy-4.0')
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}

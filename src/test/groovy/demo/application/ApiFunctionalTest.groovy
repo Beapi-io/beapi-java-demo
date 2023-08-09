@@ -1,5 +1,6 @@
 package demo.application
 
+import io.beapi.api.utils.ApiDescriptor
 import io.beapi.api.properties.ApiProperties
 import spock.lang.*
 import geb.spock.*
@@ -100,7 +101,7 @@ class ApiFunctionalTest extends Specification {
         //int statusCode = response.getStatusLine().getStatusCode()
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"info is not null"
         this.testUserToken = info.token
@@ -139,13 +140,13 @@ class ApiFunctionalTest extends Specification {
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
         ArrayList infoList = info.keySet()
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"info is not null"
         assert info!=[:]
         then:"get user"
         assert statusCode == 200
-        assert infoList == returnsList.intersect(infoList)
+        assert infoList == infoList.intersect(returnsList)
         // todo : also check that ROLE_ADMIN response vars are not in keyset
     }
 
@@ -168,7 +169,7 @@ class ApiFunctionalTest extends Specification {
         //int statusCode = response.getStatusLine().getStatusCode()
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"info is not null"
         this.adminUserToken = info.token
@@ -189,12 +190,14 @@ class ApiFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
+        //ArrayList returnsList = []
         def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
+
+        //apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
 
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        Set returnsList = getResponseData(adminAuth, apiObject)
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
@@ -208,18 +211,23 @@ class ApiFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        ArrayList infoList = info.keySet()
+        Set infoList = info.keySet()
+
+        println(statusCode)
         println("info : "+info)
+        println(info.keySet().sort())
+        println(returnsList.sort())
+
 
         when:"info is not null"
         assert info!=[:]
         then:"get user"
         assert statusCode == 200
-        assert infoList == returnsList.intersect(infoList)
+        assert infoList == infoList.intersect(returnsList)
     }
 
 
-    void "[superuser] GET USER api call without ID param"() {
+    void "[superuser] GET USER api call without ID param (TEST)"() {
         setup:"api is called"
         println(" ")
         println("[superuser] GET USER api call with ID param")
@@ -233,12 +241,13 @@ class ApiFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
-        def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
-
+        //ArrayList returnsList = []
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        def apiObject = cache?."${this.apiVersion}"?."${action}"
+        ArrayList returnsList = getResponseData(adminAuth, apiObject)
+
+        //String adminAuth = apiProperties.getSecurity().getSuperuserRole()
+        //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
@@ -253,13 +262,17 @@ class ApiFunctionalTest extends Specification {
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
         ArrayList infoList = info.keySet()
+
+        println(statusCode)
         println("info : "+info)
+        println(info.keySet().sort())
+        println(returnsList.sort())
 
         when:"info is not null"
         assert info!=[:]
         then:"get user"
         assert statusCode == 200
-        assert infoList == returnsList.intersect(infoList)
+        assert infoList == infoList.intersect(returnsList)
     }
 
     void "[superuser] GET USER api call with ID param (BAD DATA)"() {
@@ -273,12 +286,13 @@ class ApiFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
+        //ArrayList returnsList = []
         def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
-
+        //apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+
+        Set returnsList = getResponseData(adminAuth, apiObject)
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}?id=9999999" as String
 
@@ -291,7 +305,7 @@ class ApiFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"error message has been thrown"
         assert !info.isEmpty() && info.status != 200
@@ -328,7 +342,7 @@ class ApiFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"error message has been thrown"
         assert !info.isEmpty()
@@ -348,12 +362,12 @@ class ApiFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        ArrayList returnsList = []
+        //ArrayList returnsList = []
         def apiObject = cache?."${this.apiVersion}"?."${action}"
         apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
 
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
+        Set returnsList = getResponseData(adminAuth, apiObject)
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
@@ -366,7 +380,7 @@ class ApiFunctionalTest extends Specification {
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
-        println("info : "+info)
+        //println("info : "+info)
 
         when:"info is not null"
         assert info!=[:]
@@ -374,7 +388,7 @@ class ApiFunctionalTest extends Specification {
         info.each(){ it ->
             ArrayList infoList = []
             infoList = it?.keySet()
-            assert infoList == returnsList.intersect(infoList)
+            assert infoList == infoList.intersect(returnsList)
         }
     }
 
@@ -389,5 +403,15 @@ class ApiFunctionalTest extends Specification {
             version = properties.getProperty('build.version')
         }
         return version
+    }
+
+    private Set getResponseData(String auth, ApiDescriptor apiObject){
+        Set returnsList = []
+        String adminAuth = apiProperties.getSecurity().getSuperuserRole()
+
+        apiObject?.returns?."${auth}".each() { it2 -> returnsList.add(it2.name) }
+        apiObject?.returns?."permitAll".each() { it2 -> returnsList.add(it2.name) }
+
+        return returnsList
     }
 }

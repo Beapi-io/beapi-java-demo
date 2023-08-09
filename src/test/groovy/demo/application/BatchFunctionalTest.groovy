@@ -112,7 +112,7 @@ class BatchFunctionalTest extends Specification {
     void "[superuser] POST create AUTHORITY"() {
         setup:"api is called"
             println("")
-            println("### POST create AUTHORITY")
+            println("[superuser] POST create AUTHORITY")
             String METHOD = "POST"
             String action = 'create'
 
