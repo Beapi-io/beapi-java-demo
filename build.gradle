@@ -33,8 +33,9 @@ sourceSets {
 }
 
 sourceCompatibility = "${sourceCompatibility}"
-println(env.BEAPI_SNAPSHOT_VERSION)
-snapshotVersion = "${env.BEAPI_SNAPSHOT_VERSION}"
+
+println(System.getenv('BEAPI_SNAPSHOT_VERSION'))
+snapshotVersion = System.getenv('BEAPI_SNAPSHOT_VERSION')
 
 repositories {
 	mavenLocal()
