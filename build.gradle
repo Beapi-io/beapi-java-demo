@@ -33,6 +33,7 @@ sourceSets {
 }
 
 sourceCompatibility = "${sourceCompatibility}"
+println(BEAPI_SNAPSHOT_VERSION)
 snapshotVersion = "${BEAPI_SNAPSHOT_VERSION}"
 
 repositories {
