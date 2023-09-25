@@ -33,6 +33,7 @@ sourceSets {
 }
 
 sourceCompatibility = "${sourceCompatibility}"
+snapshotVersion = "${BEAPI_SNAPSHOT_VERSION}"
 
 repositories {
 	mavenLocal()
@@ -46,7 +47,7 @@ repositories {
 apply plugin: "io.spring.dependency-management"
 
 dependencies {
-	if(${BEAPI_SNAPSHOT_VERSION}) {
+	if(snapshotVersion) {
 		implementation "io.beapi:spring-boot-starter-beapi:${BEAPI_SNAPSHOT_VERSION}"
 	}else{
 		implementation 'io.beapi:spring-boot-starter-beapi:0.8.0-SNAPSHOT'
