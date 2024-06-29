@@ -119,6 +119,7 @@ class BatchFunctionalTest extends Specification {
             // test with batch; test rollback later
             //ArrayList batchData = [['authority': 'ROLE_TEST1'],['authority': 'ROLE_TEST2'],['authority': 'ROLE_TEST3'],['authority': 'ROLE_TEST4'],['authority': 'ROLE_TEST5'],['authority': 'ROLE_TEST6']]
             LinkedHashMap data = ['batch':this.batchData]
+
             String json = JsonOutput.toJson(data)
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
@@ -163,6 +164,19 @@ class BatchFunctionalTest extends Specification {
             }
     }
 
+
+    void "Cleaning up data"() {
+        setup:
+        batchData.each(){ it ->
+            it.each(){ k, v ->
+                Authority tmp = authService.findByAuthority(v);
+                if(tmp) {
+                    authService.deleteById(tmp.getId());
+                }
+            }
+        }
+        assert true
+    }
 
     private String getVersion() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();

@@ -169,6 +169,7 @@ class ChainingFunctionalTest extends Specification {
             String controller = 'company'
             String action = 'show'
 
+            println("companyId : "+this.compId)
             LinkedHashMap cache = apiCacheService.getApiCache(controller)
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
@@ -177,7 +178,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.compId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.compId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -266,7 +267,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.branchId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.branchId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -355,7 +356,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -400,7 +401,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
 
             HttpClient client = new DefaultHttpClient();
@@ -448,7 +449,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
 
             HttpClient client = new DefaultHttpClient();
@@ -494,7 +495,7 @@ class ChainingFunctionalTest extends Specification {
             String adminAuth = apiProperties.getSecurity().getSuperuserRole()
             Set returnsList = getResponseData(adminAuth, apiObject)
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}/${this.deptId}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
@@ -505,8 +506,10 @@ class ChainingFunctionalTest extends Specification {
             HttpResponse response = client.execute(request);
 
             int statusCode = response.getStatusLine().getStatusCode()
-
+            println("statusCode:"+statusCode)
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            println("ResponseBody:"+responseBody)
+
             Object info = new JsonSlurper().parseText(responseBody)
             //println(info)
 
@@ -517,30 +520,14 @@ class ChainingFunctionalTest extends Specification {
             assert info.size() == 3
     }
 
-
-
-
-
-
+    
     void "Cleaning up data"() {
         setup:
-            println("")
-            println("Cleaning up data")
-            println("dept : "+this.deptId)
-            println("branch : "+this.branchId)
-            println("comp : "+this.compId)
             deptService.deleteById(this.deptId);
             branchService.deleteById(this.branchId);
             compService.deleteById(this.compId);
-
-            //Company comp = compService.findById(this.compId);
-            //Branch branch = branchService.findById(this.branchId);
-            //Dept dept = deptService.findById(this.deptId);
         when: "test if they exist"
             assert true
-            //assert comp==null
-            //assert branch==null
-            //assert dept==null
         then: "delete all"
             assert true
     }

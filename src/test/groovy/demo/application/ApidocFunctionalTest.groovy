@@ -105,7 +105,7 @@ class ApidocFunctionalTest extends Specification {
             String action = 'show'
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
             LinkedHashMap cache = apiCacheService.getApiCache(this.controller)
-            //println(cache)
+
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
@@ -134,7 +134,7 @@ class ApidocFunctionalTest extends Specification {
             assert info!=[:]
         then:"get authority"
             assert statusCode == 200
-            assert infoList.size() == infoList.intersect(['company','user', 'apidoc','hook','properties']).size()
+            assert infoList.size() == infoList.intersect(['company','user', 'apidoc','dept','hook','properties']).size()
     }
 
 
@@ -190,6 +190,7 @@ class ApidocFunctionalTest extends Specification {
             int statusCode = response.getStatusLine().getStatusCode()
 
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+
             Object info = new JsonSlurper().parseText(responseBody)
             ArrayList infoList = info.keySet()
 

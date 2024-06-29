@@ -199,7 +199,7 @@ class BadApiFunctionalTest extends Specification {
             this.appVersion = getVersion()
             this.exchangeIntro = "v${this.appVersion}"
 
-            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}" as String
+            String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/user" as String
 
             //HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
@@ -216,13 +216,12 @@ class BadApiFunctionalTest extends Specification {
 
             if(responseBody) {
                 info = new JsonSlurper().parseText(responseBody)
-                //println("INFO : "+info)
             }
 
         when:"info is not null"
             assert info != null
         then:"get user"
-            assert statusCode == 200
+            assert statusCode == 400
     }
 
 

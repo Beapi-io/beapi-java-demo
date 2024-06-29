@@ -140,15 +140,15 @@ class AuthorityFunctionalTest extends Specification {
 
 
     void "[superuser] POST create AUTHORITY"() {
-        setup:"api is called"
+        setup: "api is called"
         println(" ")
         println("[superuser] POST create AUTHORITY")
         String METHOD = "POST"
         String action = 'create'
 
-        LinkedHashMap data = ['authority':'ROLE_TEST99']
+        LinkedHashMap data = ['authority': 'ROLE_TEST99']
         String json = JsonOutput.toJson(data)
-        HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
+        HttpEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
         LinkedHashMap cache = apiCacheService.getApiCache(controller)
         this.appVersion = getVersion()
@@ -156,7 +156,7 @@ class AuthorityFunctionalTest extends Specification {
 
         ArrayList returnsList = []
         def apiObject = cache?."${this.apiVersion}"?."${action}"
-        apiObject?.returns?.permitAll?.each(){ it -> returnsList.add(it.name) }
+        apiObject?.returns?.permitAll?.each() { it -> returnsList.add(it.name) }
 
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
         apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
@@ -165,7 +165,7 @@ class AuthorityFunctionalTest extends Specification {
 
         //HttpClient client = new DefaultHttpClient();
         HttpPost request = new HttpPost(url)
-        request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
+        request.setHeader(new BasicHeader("Authorization", "Bearer " + this.adminUserToken));
         request.setEntity(stringEntity);
         HttpResponse response = this.httpClient.execute(request);
 
@@ -175,16 +175,25 @@ class AuthorityFunctionalTest extends Specification {
         Object info = new JsonSlurper().parseText(responseBody)
 
         ArrayList infoList = info.keySet()
+        println(info)
+        println(infoList)
 
-        when:"info is not null"
-            assert info!=[:]
-            this.authorityId = info.id.toLong()
-        then:"get user"
-            assert statusCode == 200
-            assert infoList == returnsList.intersect(infoList)
+        when: "info is not null"
+        assert info != [:]
+        if (info?.id) {
+            this.authorityId = info?.id?.toLong()
+        }
+        then: "get user"
+        assert statusCode == 200
+        assert infoList == returnsList.intersect(infoList)
         cleanup:
+        if (info?.id) {
+            println(info.id)
             authService.deleteById(info.id?.toLong())
+        }
     }
+
+
 
     private String getVersion() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();

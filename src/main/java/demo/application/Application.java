@@ -15,10 +15,17 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import io.beapi.api.service.CliService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import java.util.concurrent.Executor;
+import org.springframework.context.annotation.Bean;
 
 @ComponentScan({"${beapi.components}","${application.components}"})
 @EnableJpaRepositories(basePackages = {"${beapi.repository}","${application.repository}"})
 @SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
+@EnableAsync
 class Application implements ApplicationRunner  {
 
     @Value("${spring.profiles.active}")
@@ -43,6 +50,16 @@ class Application implements ApplicationRunner  {
         System.out.println("Running in : "+profile);
         bootStrap.init(applicationContext);
         cliService.parse();
+    }
 
+    @Bean
+    public Executor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("GithubLookup-");
+        executor.initialize();
+        return executor;
     }
 }
