@@ -34,28 +34,28 @@ import org.apache.http.entity.ContentType
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.HttpResponse
 import org.apache.http.message.BasicHeader
-
 import java.nio.charset.StandardCharsets
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.client.CookieStore
+import org.apache.http.protocol.BasicHttpContext
+import org.apache.http.protocol.HttpContext
+import org.apache.http.client.protocol.HttpClientContext
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthorityFunctionalTest extends Specification {
 
-    @Autowired
-    ApplicationContext applicationContext
-
-    @Autowired
-    private ApiProperties apiProperties
-
+    @Autowired ApplicationContext applicationContext
+    @Autowired private ApiProperties apiProperties
     @Autowired AuthorityService authService
-
     @Autowired ApiCacheService apiCacheService
-
     @Autowired PrincipleService principle
 
     @Shared String adminUserToken
-
     @Shared String controller = 'authority'
+    @Shared Cookie tuCookie
+    @Shared Cookie suCookie
 
     @Value("\${server.address}")
     String serverAddress;
@@ -94,6 +94,13 @@ class AuthorityFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
+            final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+            cookies.each(){ it ->
+                if(it.getName()=='JSESSIONID'){
+                    suCookie = it
+                }
+            }
+
         when:"info is not null"
             this.adminUserToken = info.token
         then:"assert token is not null"
@@ -119,11 +126,16 @@ class AuthorityFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            //HttpClient client = new DefaultHttpClient();
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
+            HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-            HttpResponse response = this.httpClient.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -163,20 +175,24 @@ class AuthorityFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-        //HttpClient client = new DefaultHttpClient();
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
+        HttpClient client = new DefaultHttpClient();
         HttpPost request = new HttpPost(url)
         request.setHeader(new BasicHeader("Authorization", "Bearer " + this.adminUserToken));
         request.setEntity(stringEntity);
-        HttpResponse response = this.httpClient.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
         int statusCode = response.getStatusLine().getStatusCode()
 
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+        println(responseBody)
         Object info = new JsonSlurper().parseText(responseBody)
 
         ArrayList infoList = info.keySet()
-        println(info)
-        println(infoList)
 
         when: "info is not null"
         assert info != [:]
@@ -193,6 +209,16 @@ class AuthorityFunctionalTest extends Specification {
         }
     }
 
+    void "z_Cleaning up data"() {
+        setup:
+
+            Authority tmp = authService.findByAuthority(this.authorityId);
+            if(tmp) {
+                authService.deleteById(tmp.getId());
+            }
+        
+            assert true
+    }
 
 
     private String getVersion() throws IOException {

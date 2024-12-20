@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.slf4j.LoggerFactory;
-import java.util.*;
 import io.beapi.api.service.CliService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -22,11 +21,28 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 import org.springframework.context.annotation.Bean;
 
+// import jakarta.annotation.Resource;
+//import org.quartz.*;
+//import io.beapi.api.Scheduler.RateLimiterJob;
+
+//import org.quartz.JobBuilder;
+//import org.quartz.JobDetail;
+//import org.quartz.Scheduler;
+//import org.quartz.SimpleScheduleBuilder;
+//import org.quartz.Trigger;
+//import org.quartz.TriggerBuilder;
+//import org.quartz.impl.StdSchedulerFactory;
+//import org.springframework.scheduling.annotation.EnableScheduling;
+
+//@EnableScheduling
 @ComponentScan({"${beapi.components}","${application.components}"})
 @EnableJpaRepositories(basePackages = {"${beapi.repository}","${application.repository}"})
-@SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
+@SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class})
 @EnableAsync
 class Application implements ApplicationRunner  {
+
+    //@Resource
+    //private Scheduler scheduler;
 
     @Value("${spring.profiles.active}")
     String profile;
@@ -40,6 +56,7 @@ class Application implements ApplicationRunner  {
     @Autowired
     ApplicationContext applicationContext;
 
+
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
@@ -50,16 +67,24 @@ class Application implements ApplicationRunner  {
         System.out.println("Running in : "+profile);
         bootStrap.init(applicationContext);
         cliService.parse();
+/*
+        JobDetail job = JobBuilder.newJob(io.beapi.api.Scheduler.RateLimiterJob.class).withIdentity("dummyJobName", "group1").build();
+
+        // Trigger the job
+        Trigger trigger = TriggerBuilder
+                .newTrigger()
+                .withIdentity("dummyTriggerName", "group1")
+                .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(60).repeatForever()).build();
+
+        // schedule
+        try {
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            scheduler.scheduleJob(job, trigger);
+            scheduler.start();
+        }catch(SchedulerException e){
+            System.out.println("test :"+e);
+        }
+*/
     }
 
-    @Bean
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(1);
-        executor.setMaxPoolSize(1);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("GithubLookup-");
-        executor.initialize();
-        return executor;
-    }
 }

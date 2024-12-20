@@ -23,32 +23,28 @@ import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.TestPropertySource
 import spock.lang.*
-
 import java.nio.charset.StandardCharsets
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.client.CookieStore
+import org.apache.http.protocol.BasicHttpContext
+import org.apache.http.protocol.HttpContext
+import org.apache.http.client.protocol.HttpClientContext
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BadApiFunctionalTest extends Specification {
 
-    @Autowired
-    ApplicationContext applicationContext
-
-    @Autowired
-    ApiProperties apiProperties
-
-    @Autowired
-    ApiCacheService apiCacheService
-
-    @Autowired
-    PrincipleService principle
+    @Autowired ApplicationContext applicationContext
+    @Autowired ApiProperties apiProperties
+    @Autowired ApiCacheService apiCacheService
+    @Autowired PrincipleService principle
 
     @Shared String adminUserToken
-
     @Shared String testUserToken
-
-
     @Shared String controller = 'apidoc'
-
+    @Shared Cookie tuCookie
+    @Shared Cookie suCookie
 
     @Value("\${server.address}")
     String serverAddress;
@@ -73,23 +69,31 @@ class BadApiFunctionalTest extends Specification {
             println("[testuser] login")
             this.protocol = "${apiProperties.getTestingProtocol()}://"
 
-            org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
+
             LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
             String loginUri = "/authenticate"
             String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
             String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
-            HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
             HttpPost request = new HttpPost(url)
             request.setEntity(stringEntity);
-            HttpResponse response = this.httpClient.execute(request);
+            HttpResponse response = httpClient.execute(request);
 
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             //println("responseBody:"+responseBody)
             Object info = new JsonSlurper().parseText(responseBody)
             //println("info : "+info)
+
+            final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+            cookies.each(){ it ->
+                if(it.getName()=='JSESSIONID'){
+                    tuCookie = it
+                }
+            }
 
         when:"info is not null"
             this.testUserToken = info.token
@@ -123,12 +127,18 @@ class BadApiFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/user/${action}" as String
 
-            //HttpClient client = new DefaultHttpClient();
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(tuCookie);
+
+            HttpContext localContext = new BasicHttpContext();
+            HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = this.httpClient.execute(request);
+            //HttpResponse response = this.httpClient.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -166,12 +176,17 @@ class BadApiFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
-            //HttpClient client = new DefaultHttpClient();
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(tuCookie);
+
+            HttpContext localContext = new BasicHttpContext();
+            HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPut request = new HttpPut(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = this.httpClient.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
             //println(statusCode)
@@ -201,11 +216,16 @@ class BadApiFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/user" as String
 
-            //HttpClient client = new DefaultHttpClient();
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(tuCookie);
+
+            HttpContext localContext = new BasicHttpContext();
+            HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = this.httpClient.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
             //println(statusCode)
@@ -248,11 +268,16 @@ class BadApiFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}/${id}" as String
 
-            //HttpClient client = new DefaultHttpClient();
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(tuCookie);
+
+            HttpContext localContext = new BasicHttpContext();
+            HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+testUserToken));
-            HttpResponse response = this.httpClient.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 

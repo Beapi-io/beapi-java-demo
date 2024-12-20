@@ -39,31 +39,27 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import java.nio.charset.StandardCharsets
-
-
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.client.CookieStore
+import org.apache.http.protocol.BasicHttpContext
+import org.apache.http.protocol.HttpContext
+import org.apache.http.client.protocol.HttpClientContext
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BatchFunctionalTest extends Specification {
 
-    @Autowired
-    ApplicationContext applicationContext
-
-    @Autowired
-    private ApiProperties apiProperties
-
-    @Autowired
-    AuthorityService authService
-
-    @Autowired
-    ApiCacheService apiCacheService
-
-    @Autowired
-    PrincipleService principle
+    @Autowired ApplicationContext applicationContext
+    @Autowired private ApiProperties apiProperties
+    @Autowired AuthorityService authService
+    @Autowired ApiCacheService apiCacheService
+    @Autowired PrincipleService principle
 
     @Shared String adminUserToken
-
     @Shared String controller = 'authority'
+    @Shared Cookie tuCookie
+    @Shared Cookie suCookie
 
     @Value("\${server.address}")
     String serverAddress;
@@ -103,6 +99,13 @@ class BatchFunctionalTest extends Specification {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
 
+            final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+            cookies.each(){ it ->
+                if(it.getName()=='JSESSIONID'){
+                    suCookie = it
+                }
+            }
+
         when:"info is not null"
             this.adminUserToken = info.token
         then:"assert token is not null"
@@ -139,13 +142,18 @@ class BatchFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setEntity(stringEntity);
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 

@@ -28,30 +28,29 @@ import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.TestPropertySource
 import spock.lang.*
-
 import java.nio.charset.StandardCharsets
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.client.CookieStore
+import org.apache.http.protocol.BasicHttpContext
+import org.apache.http.protocol.HttpContext
+import org.apache.http.client.protocol.HttpClientContext
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LinkRelationFunctionalTest extends Specification {
 
-    @Autowired
-    ApplicationContext applicationContext
-
-    @Autowired
-    private ApiProperties apiProperties
-
-
+    @Autowired ApplicationContext applicationContext
+    @Autowired private ApiProperties apiProperties
     @Autowired ApiCacheService apiCacheService
-
     @Autowired CompanyService compService
     @Autowired BranchService branchService
     @Autowired DeptService deptService
-
     @Autowired PrincipleService principle
 
     @Shared String adminUserToken
-
+    @Shared Cookie tuCookie
+    @Shared Cookie suCookie
     
 
     @Value("\${server.address}")
@@ -84,6 +83,7 @@ class LinkRelationFunctionalTest extends Specification {
             String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
             HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
+
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost request = new HttpPost(url)
             request.setEntity(stringEntity);
@@ -92,6 +92,13 @@ class LinkRelationFunctionalTest extends Specification {
             //int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             Object info = new JsonSlurper().parseText(responseBody)
+
+            final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+            cookies.each(){ it ->
+                if(it.getName()=='JSESSIONID'){
+                    suCookie = it
+                }
+            }
 
         when:"info is not null"
             this.adminUserToken = info.token
@@ -126,13 +133,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setEntity(stringEntity);
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -169,13 +181,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.compId}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setHeader(new BasicHeader("X-LINK-RELATIONS","true"));
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
@@ -220,13 +237,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setEntity(stringEntity);
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -262,13 +284,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.branchId}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setHeader(new BasicHeader("X-LINK-RELATIONS","true"));
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -303,13 +330,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.branchId}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setHeader(new BasicHeader("X-LINK-RELATIONS","true"));
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -356,14 +388,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
 
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpPost request = new HttpPost(url)
             //request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setEntity(stringEntity);
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
 
@@ -399,13 +435,18 @@ class LinkRelationFunctionalTest extends Specification {
 
             String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(suCookie);
+
+            HttpContext localContext = new BasicHttpContext();
             HttpClient client = new DefaultHttpClient();
             //URL uri = new URL(url);
             HttpGet request = new HttpGet(url)
             request.setHeader(new BasicHeader("Content-Type","application/json"));
             request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
             request.setHeader(new BasicHeader("X-LINK-RELATIONS","true"));
-            HttpResponse response = client.execute(request);
+            localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            HttpResponse response = client.execute(request,localContext);
 
             int statusCode = response.getStatusLine().getStatusCode()
             println(statusCode)
@@ -442,13 +483,18 @@ class LinkRelationFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${controller}/${action}?id=${this.deptId}" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         //URL uri = new URL(url);
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
         request.setHeader(new BasicHeader("X-LINK-RELATIONS","true"));
-        HttpResponse response = client.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
         int statusCode = response.getStatusLine().getStatusCode()
 

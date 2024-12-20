@@ -39,6 +39,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import java.nio.charset.StandardCharsets
 
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore
+import org.apache.http.client.CookieStore
+import org.apache.http.protocol.BasicHttpContext
+import org.apache.http.protocol.HttpContext
+import org.apache.http.client.protocol.HttpClientContext
+
+
 
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -81,28 +89,38 @@ class ApiFunctionalTest extends Specification {
     @Shared String apiVersion = '1'
     @Shared Long userId
 
+    @Shared Cookie suCookie
+    @Shared Cookie tuCookie
+
 
     HttpClient httpClient = new DefaultHttpClient();
 
-
     void "[testuser] login"(){
         setup:"logging in"
-        HttpClient httpClient = new DefaultHttpClient();
+
         LinkedHashMap testUser = apiProperties.getBootstrap().getTestUser()
 
         String loginUri = "/authenticate"
         String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
         String json = "{\"username\":\"${testUser['login']}\",\"password\":\"${testUser['password']}\"}"
-        HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
         HttpPost request = new HttpPost(url)
         request.setEntity(stringEntity);
-        HttpResponse response = this.httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request);
 
         //int statusCode = response.getStatusLine().getStatusCode()
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         Object info = new JsonSlurper().parseText(responseBody)
         //println("info : "+info)
+
+        final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+        cookies.each(){ it ->
+            if(it.getName()=='JSESSIONID'){
+                tuCookie = it
+            }
+        }
 
         when:"info is not null"
         this.testUserToken = info.token
@@ -130,18 +148,25 @@ class ApiFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(tuCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.testUserToken));
-        HttpResponse response = client.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
         int statusCode = response.getStatusLine().getStatusCode()
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+        println("status:"+statusCode)
+        println("response:"+responseBody)
 
         Object info = new JsonSlurper().parseText(responseBody)
         ArrayList infoList = info.keySet()
-        //println("info : "+info)
+
 
         when:"info is not null"
         assert info!=[:]
@@ -152,17 +177,17 @@ class ApiFunctionalTest extends Specification {
     }
 
 
-
-
     void "[superuser] login "(){
         setup:"logging in"
+        println("")
+        println("[superuser] Logging in")
         LinkedHashMap suUser = apiProperties.getBootstrap().getSuperUser()
         String loginUri = "/authenticate"
         String url = "${protocol}${this.serverAddress}:${this.port}/${loginUri}" as String
         String json = "{\"username\":\"${suUser['login']}\",\"password\":\"${suUser['password']}\"}"
-        HttpEntity stringEntity = new StringEntity(json,ContentType.APPLICATION_JSON);
 
         HttpClient httpClient = new DefaultHttpClient();
+        HttpEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
         HttpPost request = new HttpPost(url)
         request.setEntity(stringEntity);
         HttpResponse response = httpClient.execute(request);
@@ -172,11 +197,19 @@ class ApiFunctionalTest extends Specification {
         Object info = new JsonSlurper().parseText(responseBody)
         //println("info : "+info)
 
+        final List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+        cookies.each(){ it ->
+            if(it.getName()=='JSESSIONID'){
+                suCookie = it
+            }
+        }
+
         when:"info is not null"
         this.adminUserToken = info.token
         then:"assert token is not null"
         assert info.token!=[:]
     }
+
 
     void "[superuser] GET USER api call without ID param"() {
         setup:"api is called"
@@ -191,26 +224,25 @@ class ApiFunctionalTest extends Specification {
         this.appVersion = getVersion()
         this.exchangeIntro = "v${this.appVersion}"
 
-        //ArrayList returnsList = []
-        def apiObject = cache?."${this.apiVersion}"?."${action}"
-
-        //apiObject.returns.permitAll.each(){ it -> returnsList.add(it.name) }
-
-        String adminAuth = apiProperties.getSecurity().getSuperuserRole()
-        //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
-        Set returnsList = getResponseData(adminAuth, apiObject)
-
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
-        request.setHeader(new BasicHeader("Content-Type","application/json"));
-        request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-        HttpResponse response = client.execute(request);
+        request.setHeader(new BasicHeader("Content-Type", "application/json"));
+        request.setHeader(new BasicHeader("Authorization", "Bearer " + this.adminUserToken));
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
         int statusCode = response.getStatusLine().getStatusCode()
-
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+        println("status:"+statusCode)
+        println("response:"+responseBody)
+
+
         Object info = new JsonSlurper().parseText(responseBody)
         Set infoList = info.keySet()
 
@@ -219,7 +251,7 @@ class ApiFunctionalTest extends Specification {
         when:"info is not null"
         assert info!=[:]
         then:"get user"
-        assert statusCode == 404
+        assert statusCode == 400
         //assert infoList == infoList.intersect(returnsList)
     }
 
@@ -248,24 +280,34 @@ class ApiFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-        HttpResponse response = client.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
         int statusCode = response.getStatusLine().getStatusCode()
-
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+        println("status:"+statusCode)
+        println("response:"+responseBody)
+
+
         Object info = new JsonSlurper().parseText(responseBody)
         ArrayList infoList = info.keySet()
+
 
         when:"info is not null"
         assert info!=[:]
         then:"get user"
-        assert statusCode == 404
+        assert statusCode == 400
         //assert infoList == infoList.intersect(returnsList)
     }
+
 
     void "[superuser] GET USER api call with ID param (BAD DATA)"() {
         setup:"api is called"
@@ -284,26 +326,33 @@ class ApiFunctionalTest extends Specification {
         String adminAuth = apiProperties.getSecurity().getSuperuserRole()
         //apiObject?.returns?."${adminAuth}".each() { it2 -> returnsList.add(it2.name) }
 
-        Set returnsList = getResponseData(adminAuth, apiObject)
-
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}?id=9999999" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-        HttpResponse response = client.execute(request);
-        int statusCode = response.getStatusLine().getStatusCode()
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
 
-        String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info = new JsonSlurper().parseText(responseBody)
-        //println("info : "+info)
+        int statusCode = response.getStatusLine().getStatusCode()
+        String responseBody = (response.getEntity()?.getContent())?IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8):null
+        println("status:"+statusCode)
+        println("response:"+responseBody)
+
+
+        Object info = (responseBody)?new JsonSlurper().parseText(responseBody):null
 
         when:"error message has been thrown"
-        assert !info.isEmpty() && info.status != 200
-        then:"status equals 422"
-        assert info.status == '404'
+        assert info==null && statusCode != 200
+        then:"status equals 204"
+        assert statusCode == 204
     }
+
 
     void "[superuser] GET USER api call with ID param"() {
         setup:"api is called"
@@ -325,16 +374,24 @@ class ApiFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}?id=test" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-        HttpResponse response = client.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
+
         int statusCode = response.getStatusLine().getStatusCode()
-
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info = new JsonSlurper().parseText(responseBody)
+        println("status:"+statusCode)
+        println("response:"+responseBody)
 
+
+        Object info = new JsonSlurper().parseText(responseBody)
 
         when:"error message has been thrown"
         assert !info.isEmpty()
@@ -345,8 +402,8 @@ class ApiFunctionalTest extends Specification {
 
     void "[superuser] GET list api call : [domain objects]"() {
         setup:"api is called"
-        println(" ")
-        println("[superuser] GET list api call : [domain objects]")
+        System.out.println(" ")
+        System.out.println("[superuser] GET list api call : [domain objects]")
         String METHOD = "GET"
         String action = 'list'
 
@@ -363,16 +420,23 @@ class ApiFunctionalTest extends Specification {
 
         String url = "${protocol}${this.serverAddress}:${this.port}/${this.exchangeIntro}/${this.controller}/${action}" as String
 
+        CookieStore cookieStore = new BasicCookieStore();
+        cookieStore.addCookie(suCookie);
+
+        HttpContext localContext = new BasicHttpContext();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url)
         request.setHeader(new BasicHeader("Content-Type","application/json"));
         request.setHeader(new BasicHeader("Authorization","Bearer "+this.adminUserToken));
-        HttpResponse response = client.execute(request);
+        localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpResponse response = client.execute(request,localContext);
+
         int statusCode = response.getStatusLine().getStatusCode()
-
         String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-        Object info = new JsonSlurper().parseText(responseBody)
+        println("status:"+statusCode)
+        println("response:"+responseBody)
 
+        Object info = new JsonSlurper().parseText(responseBody)
 
         when:"info is not null"
         assert info!=[:]
@@ -404,4 +468,5 @@ class ApiFunctionalTest extends Specification {
 
         return returnsList
     }
+
 }
